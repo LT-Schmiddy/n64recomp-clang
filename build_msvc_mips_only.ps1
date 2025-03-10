@@ -14,7 +14,7 @@ cmake `
 	-DLLVM_DEFAULT_TARGET_TRIPLE=mips `
 	-DLLVM_TARGETS_TO_BUILD=Mips `
 	-DLLVM_ENABLE_PROJECTS="clang;lld;lldb;clang-tools-extra" `
-	-DLLVM_ENABLE_RUNTIMES="libc;libcxxabi;libcxx" `
+	-DLLVM_ENABLE_RUNTIMES="libc;libcxxabi;libcxx;compiler-rt" `
 ;
 	
 cmake --build $build_dir;
