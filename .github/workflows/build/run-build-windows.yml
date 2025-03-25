@@ -4,15 +4,8 @@ name: ci-build-windows
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "master", "dev" ]
-  pull_request:
-    branches: [ "master", "dev" ]
-
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
+  workflow_call:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -41,7 +34,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: run-windows-build
         run: |-
-          python ./run_build.py
+          python ./run_build.py ${{ inputs.script-args }}
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:

@@ -1,12 +1,11 @@
 name: publish-release
 on:
-  workflow_run:
-    workflows: [ci-build-windows]
-    types:
-      - completed
-    push:
-      branches: [ "master" ]
+  push:
+    branches: [ "master" ]
 jobs:
+  build-windows: 
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/build/run-build-windows.yml@HEAD
+
   publish-release:
     runs-on: windows-latest
     needs: build-windows
