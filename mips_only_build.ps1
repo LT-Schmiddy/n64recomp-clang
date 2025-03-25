@@ -1,11 +1,4 @@
-﻿# cd llvm-project/llvm;
-
-$drive = Get-Location;
-Write-Output $drive;
-
-Launch-VsDevShell;
-
-Set-Location $drive
+﻿# Run in VS Dev Shell with Launch-VsDevShell
 
 $source_dir = "./llvm-project/llvm";
 $build_dir = "./build";
