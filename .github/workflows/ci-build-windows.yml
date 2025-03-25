@@ -33,20 +33,15 @@ jobs:
       - name: couble-checking-submodules
         run: |-
           git submodule update --init --recursive
-      - name: choco-install-ninja
+      - name: choco-install-ninja python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install ninja
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: run-windows-build
-        shell: pwsh
         run: |-
-          ./mips_only_build.ps1
-      - name: preparing-essential-distribution
-        shell: pwsh
-        run: |-
-          ./prepare_min_dist.ps1
+          python ./run_build.py
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
