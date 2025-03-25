@@ -1,5 +1,5 @@
 $src_dir = "./build/bin";
-$dst_dir = "./build/bin_min";
+$dst_dir = "./build/bin_essentials";
 
 $myArray = @(
     # Executables

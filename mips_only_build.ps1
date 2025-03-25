@@ -1,4 +1,4 @@
-﻿# Run in VS Dev Shell with Launch-VsDevShell
+﻿# Run in VS Dev Shell with Launch-VsDevShell -Arch amd64
 
 $source_dir = "./llvm-project/llvm";
 $build_dir = "./build";
@@ -14,5 +14,7 @@ cmake `
 	-DLLVM_DEFAULT_TARGET_TRIPLE=mips `
 	-DLLVM_TARGETS_TO_BUILD=Mips `
 	-DLLVM_ENABLE_PROJECTS="clang;lld;" `
+	-DLLVM_USE_RELATIVE_PATHS_IN_FILES=ON `
+	-DLLVM_USE_RELATIVE_PATHS_IN_DEBUG_INFO=ON `
 ;
 cmake --build $build_dir;

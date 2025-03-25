@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -40,17 +40,17 @@ jobs:
         shell: pwsh
         run: |-
           ./mips_only_build.ps1
-      - name: Preparing Minimal Distribution
+      - name: Preparing Essential Distribution
         shell: pwsh
         run: |-
           ./prepare_min_dist.ps1
-      - name: Archive Minimal Binaries
+      - name: Archive Essential Binaries
         uses: actions/upload-artifact@v4
         with:
-          name: n64recomp-clang-minimal-${{ runner.os }}
+          name: n64recomp-clang-essentials-${{ runner.os }}
           path: |
-            ./build/bin_min/*
-      - name: Archive Full Binaries
+            ./build/bin_essentials/*
+      - name: Archive All Binaries
         uses: actions/upload-artifact@v4
         with:
           name: n64recomp-clang-${{ runner.os }}
