@@ -2,6 +2,8 @@ name: publish-release
 on:
   push:
     branches: [ "master" ]
+    tags:        
+      - 'release/*'
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master

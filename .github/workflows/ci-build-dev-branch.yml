@@ -7,6 +7,7 @@ on:
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
+    if: startsWith(github.ref, 'refs/tags/')
 
 
       
