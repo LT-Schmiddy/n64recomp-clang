@@ -38,6 +38,7 @@ jobs:
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Run Windows Build
+        shell: pwsh
         run: |-
           ./mips_only_build.ps1
       - name: Archive Binaries
