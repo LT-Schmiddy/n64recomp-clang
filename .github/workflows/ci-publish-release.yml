@@ -4,7 +4,7 @@ on:
     branches: [ "master" ]
 jobs:
   build-windows: 
-    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/build/run-build-windows.yml@HEAD
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@HEAD
 
   publish-release:
     runs-on: windows-latest
