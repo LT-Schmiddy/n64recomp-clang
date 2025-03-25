@@ -1,0 +1,10 @@
+name: build-dev-branch
+on:
+  push:
+    branches: [ "dev" ]
+jobs:
+  build-windows: 
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
+    
+
+      
