@@ -28,10 +28,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           submodules: recursive
-      - name: Install Windows Dependencies
-        run: |
-          choco install ninja
-          Remove-Item -Path "C:\ProgramData\Chocolatey\bin\ccache.exe" -Force -ErrorAction SilentlyContinue
+      - name: Double-checking submodules
+        run: |-
+          git submodule update --init --recursive
+      - name: Choco - Install Ninja
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install ninja
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Run Windows Build
