@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-windows:
     # The type of runner that the job will run on
     runs-on: windows-latest
     outputs:
@@ -33,10 +33,10 @@ jobs:
       - name: couble-checking-submodules
         run: |-
           git submodule update --init --recursive
-      - name: choco-install-ninja python
+      - name: choco-install-ninja-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
-          args: install ninja
+          args: install ninja python
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: run-windows-build

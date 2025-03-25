@@ -1,0 +1,26 @@
+name: update-pr-artifacts
+on:
+  workflow_run:
+    workflows: [ci-build-windows]
+    types:
+      - completed
+    push:
+      branches: [ "master" ]
+jobs:
+  publish-release:
+    runs-on: windows-latest
+    needs: build-windows
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: ${{ github.ref }}
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          files: |
+            ${{needs.build-windows.outputs.essential-binaries}}
+            ${{needs.build-windows.outputs.all-binaries}}
+          make_latest: true
+      
