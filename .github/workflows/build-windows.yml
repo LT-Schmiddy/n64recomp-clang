@@ -19,7 +19,6 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: windows-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -41,10 +40,20 @@ jobs:
         shell: pwsh
         run: |-
           ./mips_only_build.ps1
-      - name: Archive Binaries
+      - name: Preparing Minimal Distribution
+        shell: pwsh
+        run: |-
+          ./prepare_min_dist.ps1
+      - name: Archive Minimal Binaries
         uses: actions/upload-artifact@v4
         with:
-          name: Zelda64Recompiled-${{ runner.os }}-${{ matrix.type }}
+          name: n64recomp-clang-minimal-${{ runner.os }}
+          path: |
+            ./build/bin_min/*
+      - name: Archive Full Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: n64recomp-clang-${{ runner.os }}
           path: |
             ./build/bin/*
         
