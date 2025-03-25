@@ -1,7 +1,6 @@
 name: publish-release
 on:
   push:
-    branches: [ "master" ]
     tags:        
       - 'release/*'
 jobs:
@@ -21,7 +20,6 @@ jobs:
           name: ${{ github.ref }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           files: |
-            ${{needs.build-windows.outputs.essential-binaries}}
-            ${{needs.build-windows.outputs.all-binaries}}
+            ./uploads/*
           make_latest: true
       

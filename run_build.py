@@ -1,11 +1,12 @@
-import os, shutil, subprocess, platform
+import os, shutil, subprocess, platform, zipfile
 from pathlib import Path
 
 proot = Path(__file__).parent
 llvm_dir = proot.joinpath("llvm-project/llvm")
 build_dir = proot.joinpath("build")
 build_bin_dir = build_dir.joinpath("bin")
-build_bin_essentials_dir = build_dir.joinpath("bin", "essentials")
+build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
+upload_dir = proot.joinpath("uploads")
 
 essential_exec = [
     # Executables
@@ -49,6 +50,23 @@ def get_file_extensions() -> tuple[str]:
         return ".exe", ".dll"
     
     raise RuntimeError(f"Couldn't determine executable file extensions for '{platform.system()=}'!")
+
+
+def get_clang_version_string() -> str:    
+    clang_result = subprocess.run(
+        [
+            build_bin_dir.joinpath("clang"),
+            "--version"
+        ],
+        cwd=build_bin_dir,
+        stdout = subprocess.PIPE
+    )
+
+    validate_command("Getting Built Clang Info", clang_result)
+    out_str = clang_result.stdout.decode()
+    name_str = out_str.split("\n")[0].split("(")[0].strip()
+    print(f"Determined Clang Version String: {name_str}")
+    return name_str
 
 # Steps:
 def build_tools():
@@ -111,10 +129,24 @@ def create_essentials_dir():
         dst = build_bin_essentials_dir.joinpath(i).with_suffix(libs_suffix)
         print(f"Copying '{src}' to '{dst}'...")
         shutil.copy(src, dst)
+
+def create_release_archives():
+    name_str: str = get_clang_version_string().capitalize()
+    essentials_archive_path = upload_dir.joinpath(f"{name_str} - N64Recomp Essentials - Mips Only - {platform.system()}")
+    full_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - {platform.system()}")
+    os.makedirs(upload_dir, exist_ok=True)
     
+    print("Creating Essentials Release Archive...")
+    shutil.make_archive(essentials_archive_path, "zip", build_bin_essentials_dir, build_bin_essentials_dir)
+    
+    print("Creating Full Release Archive...")
+    shutil.make_archive(full_archive_path, "zip", build_bin_dir, build_bin_dir)
+    
+
 def main():
     build_tools()
     create_essentials_dir()
+    create_release_archives()
     
 if __name__ == '__main__':
     main()
