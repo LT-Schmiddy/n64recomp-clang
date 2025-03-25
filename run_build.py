@@ -10,19 +10,19 @@ upload_dir = proot.joinpath("uploads")
 
 essential_exec = [
     # Executables
-    "clang",
-    "clang++",
-    "clang-cpp",
-    "clang-format",
-    "ld.lld",
-    "llvm-ar",
-    "llvm-as",
-    "llvm-objcopy",
-    "llvm-objdump",
-    "llvm-ranlib",
-    "llvm-readelf",
-    "llvm-strings",
-    "llvm-strip",
+    "clang._",
+    "clang++._",
+    "clang-cpp._",
+    "clang-format._",
+    "ld.lld._",
+    "llvm-ar._",
+    "llvm-as._",
+    "llvm-objcopy._",
+    "llvm-objdump._",
+    "llvm-ranlib._",
+    "llvm-readelf._",
+    "llvm-strings._",
+    "llvm-strip._",
 ]
 essential_libs = [
     "libclang",
