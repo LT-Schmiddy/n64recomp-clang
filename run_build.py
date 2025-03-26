@@ -25,8 +25,8 @@ essential_exec = [
     "llvm-strip._",
 ]
 essential_libs = [
-    "libclang",
-    "LLVM-C"
+    "libclang._",
+    "LLVM-C._"
 ]
 # Utility Functions:
 def find_tool(tools: dict[str, str], name: str):
