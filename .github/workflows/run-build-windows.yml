@@ -23,7 +23,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           submodules: recursive
-      - name: couble-checking-submodules
+      - name: double-checking-submodules
         run: |-
           git submodule update --init --recursive
       - name: choco-install-ninja-python
