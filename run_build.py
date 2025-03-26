@@ -65,7 +65,7 @@ def get_clang_version_string() -> str:
     validate_command("Getting Built Clang Info", clang_result)
     out_str = clang_result.stdout.decode()
     name_str = out_str.split("\n")[0].split("(")[0].strip()
-    print(f"Determined Clang Version String: {name_str}")
+    print(f"{name_str}")
     return name_str
 
 # Steps:

@@ -11,6 +11,11 @@ jobs:
     runs-on: windows-latest
     needs: build-windows
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          submodules: recursive
       - name: Get Artifacts
         uses: actions/download-artifact@v4
         with:
