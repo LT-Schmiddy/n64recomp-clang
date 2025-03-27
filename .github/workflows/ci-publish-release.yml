@@ -6,8 +6,6 @@ on:
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master
-    with:
-      script-args: dummy
   publish-release:
     runs-on: windows-latest
     needs: build-windows
@@ -21,32 +19,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: $GITHUB_WORKSPACE/archives
-      - name: choco-install-python
-        uses: crazy-max/ghaction-chocolatey@v3
-        with:
-          args: install python
-      - name: info-script
-        shell: python
-        run: |
-          import os, shutil
-          from pathlib import Path
-          # Printing dir tree:
-          print(f"{os.getcwd()=}")
-          for root, dirs, files in os.walk(os.getcwd()):
-            if ".git" in root:
-              continue
-
-            print("Directory:", root)
-            print("Subdirectories:")
-            for dir in dirs:
-              print(f"\t{dir}")
-
-            print("Files:")
-            for file in files:
-              print(f"\t{file}")
-            
-            print("-" * 20)
-
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
