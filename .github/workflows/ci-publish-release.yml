@@ -33,8 +33,10 @@ jobs:
           # Printing dir tree:
           print(f"{os.getcwd()=}")
           for root, dirs, files in os.walk(os.getcwd()):
+            if ".git" in root:
+              continue
+
             print("Directory:", root)
-            
             print("Subdirectories:")
             for dir in dirs:
               print(f"\t{dir}")
@@ -52,6 +54,7 @@ jobs:
           name: ${{ github.ref_name }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           files: |
-            $GITHUB_WORKSPACE/archives/*
+            $GITHUB_WORKSPACE/archives/essentials-Windows/*
+            $GITHUB_WORKSPACE/archives/full-Windows/*
           make_latest: true
       

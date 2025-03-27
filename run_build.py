@@ -151,8 +151,8 @@ def create_essentials_dir():
 
 def create_release_archives():
     name_str: str = get_clang_version_string().capitalize()
-    essentials_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - N64Recomp Essentials - {platform.system()}")
-    full_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - Full - {platform.system()}")
+    essentials_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - {platform.system()} - N64Recomp Essentials")
+    full_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - {platform.system()} - Full")
     os.makedirs(upload_dir, exist_ok=True)
     
     print("Creating Essentials Release Archive...")

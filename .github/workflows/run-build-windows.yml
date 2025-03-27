@@ -42,14 +42,14 @@ jobs:
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
-          name: n64recomp-clang-essentials-${{ runner.os }}
+          name: essentials-${{ runner.os }}
           path: |
-            ./archives/*Full - Windows.zip
+            ./archives/*N64Recomp Essentials*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
-          name: n64recomp-clang-${{ runner.os }}
+          name: full-${{ runner.os }}
           path: |
-            ./archives/*N64Recomp Essentials - Windows.zip
+            ./archives/*Full*
 
         
