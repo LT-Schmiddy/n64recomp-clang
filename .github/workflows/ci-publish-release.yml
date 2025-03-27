@@ -36,11 +36,11 @@ jobs:
             print("Directory:", root)
             
             print("Subdirectories:")
-            for dir in dirs
+            for dir in dirs:
               print(f"\t{dir}")
 
             print("Files:")
-            for file in files
+            for file in files:
               print(f"\t{file}")
             
             print("-" * 20)
