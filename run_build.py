@@ -128,7 +128,7 @@ def build_dummy():
         print(f"Created dummy '{src}'...")
         
     for i in essential_libs:
-        src = build_bin_dir.joinpath(i).with_suffix(libs_suffix).write_text(i)
+        src = build_bin_dir.joinpath(i).with_suffix(libs_suffix)
         src.write_text(i)
         print(f"Created dummy '{src}'...")
 
