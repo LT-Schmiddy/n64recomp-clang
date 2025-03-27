@@ -44,7 +44,7 @@ jobs:
         with:
           name: essentials-${{ runner.os }}
           path: |
-            ./archives/*N64Recomp Essentials*
+            ./archives/*N64RecompEssentials*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
