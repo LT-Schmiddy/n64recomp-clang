@@ -20,7 +20,7 @@ jobs:
       - name: Get Artifacts
         uses: actions/download-artifact@v4
         with:
-          path: $GITHUB_WORKSPACE/uploads
+          path: $GITHUB_WORKSPACE/archives
       - name: choco-install-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
@@ -52,6 +52,6 @@ jobs:
           name: ${{ github.ref_name }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           files: |
-            ./uploads/*
+            $GITHUB_WORKSPACE/archives/*
           make_latest: true
       

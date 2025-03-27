@@ -44,11 +44,12 @@ jobs:
         with:
           name: n64recomp-clang-essentials-${{ runner.os }}
           path: |
-            ./build/bin_essentials/*
-      - name: archive-all-binaries
+            ./archives/*Full - Windows.zip
+      - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
           name: n64recomp-clang-${{ runner.os }}
           path: |
-            ./build/bin/*
+            ./archives/*N64Recomp Essentials - Windows.zip
+
         

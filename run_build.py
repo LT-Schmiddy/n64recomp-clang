@@ -6,7 +6,7 @@ llvm_dir = proot.joinpath("llvm-project/llvm")
 build_dir = proot.joinpath("build")
 build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
-upload_dir = proot.joinpath("uploads")
+upload_dir = proot.joinpath("archives")
 
 essential_exec = [
     # Executables
@@ -151,8 +151,8 @@ def create_essentials_dir():
 
 def create_release_archives():
     name_str: str = get_clang_version_string().capitalize()
-    essentials_archive_path = upload_dir.joinpath(f"{name_str} - N64Recomp Essentials - Mips Only - {platform.system()}")
-    full_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - {platform.system()}")
+    essentials_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - N64Recomp Essentials - {platform.system()}")
+    full_archive_path = upload_dir.joinpath(f"{name_str} - Mips Only - Full - {platform.system()}")
     os.makedirs(upload_dir, exist_ok=True)
     
     print("Creating Essentials Release Archive...")
