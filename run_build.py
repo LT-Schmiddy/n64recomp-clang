@@ -123,11 +123,13 @@ def build_dummy():
     
     os.makedirs(build_bin_dir, exist_ok=True)
     for i in essential_exec:
-        src = build_bin_dir.joinpath(i).with_suffix(exec_suffix).write_text(i)
+        src = build_bin_dir.joinpath(i).with_suffix(exec_suffix)
+        src.write_text(i)
         print(f"Created dummy '{src}'...")
         
     for i in essential_libs:
         src = build_bin_dir.joinpath(i).with_suffix(libs_suffix).write_text(i)
+        src.write_text(i)
         print(f"Created dummy '{src}'...")
 
 def create_essentials_dir():
