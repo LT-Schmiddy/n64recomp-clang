@@ -6,6 +6,10 @@ name: ci-build-windows
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_call:
+    inputs:
+      script-args:
+        required: false
+        type: string
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"

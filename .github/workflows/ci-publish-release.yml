@@ -6,7 +6,8 @@ on:
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master
-
+    with:
+      script-args: dummy
   publish-release:
     runs-on: windows-latest
     needs: build-windows

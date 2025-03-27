@@ -1,4 +1,4 @@
-import os, shutil, subprocess, platform, zipfile
+import sys, os, shutil, subprocess, platform
 from pathlib import Path
 
 proot = Path(__file__).parent
@@ -53,18 +53,22 @@ def get_file_extensions() -> tuple[str]:
 
 
 def get_clang_version_string() -> str:    
-    clang_result = subprocess.run(
-        [
-            build_bin_dir.joinpath("clang"),
-            "--version"
-        ],
-        cwd=build_bin_dir,
-        stdout = subprocess.PIPE
-    )
+    try:
+        clang_result = subprocess.run(
+            [
+                build_bin_dir.joinpath("clang"),
+                "--version"
+            ],
+            cwd=build_bin_dir,
+            stdout = subprocess.PIPE
+        )
 
-    validate_command("Getting Built Clang Info", clang_result)
-    out_str = clang_result.stdout.decode()
-    name_str = out_str.split("\n")[0].split("(")[0].strip()
+        validate_command("Getting Built Clang Info", clang_result)
+        out_str = clang_result.stdout.decode()
+        name_str = out_str.split("\n")[0].split("(")[0].strip()
+    except OSError as e:
+        name_str = "unknown"
+    
     print(f"{name_str}")
     return name_str
 
@@ -112,7 +116,20 @@ def build_tools():
             env=env_dict
         )
     )
+
+def build_dummy():
+    print("Preparing Dummy Build...")
+    exec_suffix, libs_suffix = get_file_extensions()
     
+    os.makedirs(build_bin_dir, exist_ok=True)
+    for i in essential_exec:
+        src = build_bin_dir.joinpath(i).with_suffix(exec_suffix).write_text(i)
+        print(f"Created dummy '{src}'...")
+        
+    for i in essential_libs:
+        src = build_bin_dir.joinpath(i).with_suffix(libs_suffix).write_text(i)
+        print(f"Created dummy '{src}'...")
+
 def create_essentials_dir():
     print("Preparing Essentials...")
     exec_suffix, libs_suffix = get_file_extensions()
@@ -144,7 +161,10 @@ def create_release_archives():
     
 
 def main():
-    build_tools()
+    if "dummy" in sys.argv:
+        build_dummy()
+    else:
+        build_tools()
     create_essentials_dir()
     create_release_archives()
     
