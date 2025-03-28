@@ -2,7 +2,7 @@ name: build-dev-branch
 on:
   push:
     tags:        
-      - 'dev-build-*.*.*'
+      - 'dev-build-*-*-*'
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
