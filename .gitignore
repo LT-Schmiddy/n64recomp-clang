@@ -2,3 +2,4 @@
 /build*/
 /llvm-project/llvm/*.json
 *.pyc
+_release.md

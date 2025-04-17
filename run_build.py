@@ -75,6 +75,39 @@ def get_clang_version_string() -> str:
     print(f"{name_str}")
     return name_str
 
+def get_git_info() -> dict[str, str]:
+    retVal = {}
+    
+    tools: dict[str, str] = {}
+    find_tool(tools, "git")
+    git_commit_result = subprocess.run(
+            [
+                tools["git"],
+                "rev-parse",
+                "HEAD"
+            ],
+            cwd=llvm_dir,
+            stdout = subprocess.PIPE
+        )
+    validate_command("Getting LLVM Commit", git_commit_result)
+    
+    git_branch_result = subprocess.run(
+            [
+                tools["git"],
+                "branch",
+                "--show-current"
+            ],
+            cwd=llvm_dir,
+            stdout = subprocess.PIPE
+        )
+    validate_command("Getting LLVM Branch", git_branch_result)
+    
+    retVal["commit"] = git_commit_result.stdout.decode().strip()
+    retVal["branch"] = git_branch_result.stdout.decode().strip()
+    
+    return retVal
+    
+        
 # Steps:
 def build_tools(preset: str):
     print("Building...")
@@ -161,9 +194,10 @@ def create_release_archives():
     
     print("Creating Full Release Archive...")
     shutil.make_archive(full_archive_path, "zip", build_bin_dir, build_bin_dir)
-    
 
 def main():
+    if sys.argv[1] == "skip":
+        pass
     if sys.argv[1] == "dummy":
         build_dummy()
     else:
