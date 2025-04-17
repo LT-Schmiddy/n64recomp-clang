@@ -168,14 +168,16 @@ def create_essentials_dir():
     for i in essential_exec:
         src = build_bin_dir.joinpath(i).with_suffix(exec_suffix)
         dst = build_bin_essentials_dir.joinpath(i).with_suffix(exec_suffix)
-        print(f"Copying '{src}' to '{dst}'...")
-        shutil.copy(src, dst)
+        if src.is_file():
+            print(f"Copying '{src}' to '{dst}'...")
+            shutil.copy(src, dst)
         
     for i in essential_libs:
         src = build_bin_dir.joinpath(i).with_suffix(libs_suffix)
         dst = build_bin_essentials_dir.joinpath(i).with_suffix(libs_suffix)
-        print(f"Copying '{src}' to '{dst}'...")
-        shutil.copy(src, dst)
+        if src.is_file():
+            print(f"Copying '{src}' to '{dst}'...")
+            shutil.copy(src, dst)
 
 def create_release_archives():
     
