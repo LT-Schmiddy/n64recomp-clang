@@ -10,8 +10,7 @@ jobs:
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@master
   publish-release:
     runs-on: windows-latest
-    needs: build-windows
-    needs: build-ubuntu
+    needs: build-windows build-ubuntu
     steps:
       - name: checkout
         uses: actions/checkout@v4
