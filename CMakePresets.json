@@ -16,7 +16,7 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "LLVM_DEFAULT_TARGET_TRIPLE": "mips",
                 "LLVM_TARGETS_TO_BUILD": "Mips",
-                "LLVM_ENABLE_PROJECTS=clang": "lld",
+                "LLVM_ENABLE_PROJECTS": "clang;lld",
                 "LLVM_USE_RELATIVE_PATHS_IN_FILES": "ON",
                 "LLVM_USE_RELATIVE_PATHS_IN_DEBUG_INFO": "ON"   
             }
@@ -31,6 +31,12 @@
                 "CXX":  "cl",
                 "ASM": "cl"
             }
+        },
+        {
+            "name": "ubuntu-x64",
+            "inherits": "default",
+            "displayName": "ubuntu-x64",
+            "description": "This build is only available on Ubuntu"
         }
     ],
     "buildPresets": [
@@ -41,6 +47,10 @@
         {
             "name": "windows-x64",
             "configurePreset": "windows-x64"
+        },
+        {
+            "name": "ubuntu-x64",
+            "configurePreset": "ubuntu-x64"
         }
     ]
 }
