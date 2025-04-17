@@ -40,13 +40,13 @@ jobs:
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
-          name: essentials-${{ runner.os }}-{{ runner.arch }}
+          name: essentials-${{ runner.os }}-${{ runner.arch }}
           path: |
             ./archives/*N64RecompEssentials*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
-          name: full-${{ runner.os }}
+          name: full-${{ runner.os }}-${{ runner.arch }}
           path: |
             ./archives/*Full*
 
