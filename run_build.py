@@ -8,6 +8,9 @@ build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
 upload_dir = proot.joinpath("archives")
 
+source_presets_file = proot.joinpath("./CMakePresets.json")
+llvm_presets_file = llvm_dir.joinpath("./CMakePresets.json")
+
 essential_exec = [
     # Executables
     "clang._",
@@ -73,14 +76,16 @@ def get_clang_version_string() -> str:
     return name_str
 
 # Steps:
-def build_tools():
+def build_tools(preset: str):
     print("Building...")
     tools: dict[str, str] = {}
     find_tool(tools, "cmake")
     find_tool(tools, "ninja")
     
+    shutil.copy(source_presets_file, llvm_presets_file)
+    
     env_dict = os.environ.copy().update({
-        "CXX":  "cl",
+        "C":  "cl",
         "CXX":  "cl"
     })
     
@@ -91,13 +96,7 @@ def build_tools():
                 tools["cmake"],
                 "-S", str(llvm_dir),
                 "-B", str(build_dir),
-                "-G", "Ninja",
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-DLLVM_DEFAULT_TARGET_TRIPLE=mips",
-                "-DLLVM_TARGETS_TO_BUILD=Mips",
-                "-DLLVM_ENABLE_PROJECTS=clang;lld",
-                "-DLLVM_USE_RELATIVE_PATHS_IN_FILES=ON",
-                "-DLLVM_USE_RELATIVE_PATHS_IN_DEBUG_INFO=ON"
+                "--preset", preset
             ],
             cwd=proot,
             env=env_dict
@@ -110,12 +109,14 @@ def build_tools():
             [
                 tools["cmake"],
                 "--build",
-                str(build_dir)
+                "--preset", preset
             ],
             cwd=proot,
             env=env_dict
         )
     )
+    
+    os.remove(llvm_presets_file)
 
 def build_dummy():
     print("Preparing Dummy Build...")
@@ -163,10 +164,11 @@ def create_release_archives():
     
 
 def main():
-    if "dummy" in sys.argv:
+    if sys.argv[1] == "dummy":
         build_dummy()
     else:
-        build_tools()
+        build_tools(sys.argv[1])
+        
     create_essentials_dir()
     create_release_archives()
     

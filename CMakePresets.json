@@ -1,0 +1,45 @@
+{
+    "version": 9,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "LLVM_DEFAULT_TARGET_TRIPLE": "mips",
+                "LLVM_TARGETS_TO_BUILD": "Mips",
+                "LLVM_ENABLE_PROJECTS=clang": "lld",
+                "LLVM_USE_RELATIVE_PATHS_IN_FILES": "ON",
+                "LLVM_USE_RELATIVE_PATHS_IN_DEBUG_INFO": "ON"   
+            }
+        },
+        {
+            "name": "windows-x64",
+            "inherits": "default",
+            "displayName": "Windows-x64",
+            "description": "This build is only available on Windows",
+            "environment": {
+                "C":  "cl",
+                "CXX":  "cl",
+                "ASM": "cl"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "windows-x64",
+            "configurePreset": "windows-x64"
+        }
+    ]
+}

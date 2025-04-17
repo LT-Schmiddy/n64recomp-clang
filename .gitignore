@@ -1,3 +1,4 @@
 /archives/
 /build*/
+/llvm-project/llvm/*.json
 *.pyc
