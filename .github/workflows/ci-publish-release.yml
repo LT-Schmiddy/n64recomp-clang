@@ -17,7 +17,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           submodules: recursive
-          # submodules: recursive
       - name: Get Artifacts
         uses: actions/download-artifact@v4
         with:
