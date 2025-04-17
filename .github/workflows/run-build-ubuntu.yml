@@ -30,8 +30,9 @@ jobs:
       - name: double-checking-submodules
         run: |-
           git submodule update --init --recursive
+      - name: set-up-build-tools
         run: |-
-          sudo apt install -y clang lld ninja-build python3
+          sudo apt install -y cmake clang lld ninja-build python3 gcc
       - name: run-windows-build
         run: |-
           python ./run_build.py ubuntu-x64
