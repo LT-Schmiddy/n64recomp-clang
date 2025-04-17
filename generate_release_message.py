@@ -13,7 +13,6 @@ release_md.write_text(f"""
 
 # Build Info:
 
-* Commit: [{git_info['commit']}]({repo_url}/tree/{git_info['commit']})
-* Branch: [{git_info['branch']}]({repo_url}/tree/{git_info['branch']})
+* LLVM Commit: [{git_info['commit']}]({repo_url}/tree/{git_info['commit']})
 
 """.strip() + "\n")
