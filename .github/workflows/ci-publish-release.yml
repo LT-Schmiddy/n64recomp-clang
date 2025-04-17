@@ -35,7 +35,6 @@ jobs:
           name: ${{ github.ref_name }}
           body_path: ${{ github.workspace }}/_release.md
           files: |
-            $GITHUB_WORKSPACE/archives/essentials-Windows/*
-            $GITHUB_WORKSPACE/archives/full-Windows/*
+            $GITHUB_WORKSPACE/archives/*/*
           make_latest: true
       
