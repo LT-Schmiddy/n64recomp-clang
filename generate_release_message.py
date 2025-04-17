@@ -1,5 +1,5 @@
 from pathlib import Path
-import run_build as rb
+import build_llvm as rb
 
 release_md = rb.proot.joinpath("_release.md")
 repo_url = "https://github.com/llvm/llvm-project"

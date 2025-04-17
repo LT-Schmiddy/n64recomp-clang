@@ -8,7 +8,7 @@ build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
 upload_dir = proot.joinpath("archives")
 
-source_presets_file = proot.joinpath("./CMakePresets.json")
+source_presets_file = proot.joinpath("./LLVM_CMakePresets.json")
 llvm_presets_file = llvm_dir.joinpath("./CMakePresets.json")
 
 essential_exec = [
