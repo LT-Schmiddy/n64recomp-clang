@@ -35,11 +35,12 @@ jobs:
           sudo apt update; sudo apt install -y cmake clang lld ninja-build python3 gcc
       - name: run-windows-build
         run: |-
+          # python ./run_build.py ubuntu-x64
           python ./run_build.py dummy
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
-          name: essentials-${{ runner.os }}
+          name: essentials-${{ runner.os }}-{{ runner.arch }}
           path: |
             ./archives/*N64RecompEssentials*
       - name: archive-full-binaries
