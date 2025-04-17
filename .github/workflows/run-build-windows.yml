@@ -40,6 +40,7 @@ jobs:
         run: |-
           # python ./run_build.py windows-x64
           python ./run_build.py dummy
+      - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
           name: essentials-${{ runner.os }}-${{ runner.arch }}
