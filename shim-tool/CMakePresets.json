@@ -1,0 +1,47 @@
+{
+    "version": 9,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "binaryDir": "${sourceDir}/build",
+            "generator": "Ninja",
+            "cacheVariables": { 
+            }
+        },
+        {
+            "name": "windows-x64",
+            "inherits": "default",
+            "displayName": "Windows-x64",
+            "description": "This build is only available on Windows",
+            "environment": {
+            }
+        },
+        {
+            "name": "ubuntu-x64",
+            "inherits": "default",
+            "displayName": "ubuntu-x64",
+            "description": "This build is only available on Ubuntu"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "windows-x64",
+            "configurePreset": "windows-x64"
+        },
+        {
+            "name": "ubuntu-x64",
+            "configurePreset": "ubuntu-x64"
+        }
+    ]
+}
