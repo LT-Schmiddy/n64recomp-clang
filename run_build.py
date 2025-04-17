@@ -3,7 +3,7 @@ from pathlib import Path
 
 proot = Path(__file__).parent
 llvm_dir = proot.joinpath("llvm-project/llvm")
-build_dir = proot.joinpath("build")
+build_dir = llvm_dir.joinpath("build")
 build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
 upload_dir = proot.joinpath("archives")
@@ -116,11 +116,7 @@ def build_tools(preset: str):
     find_tool(tools, "ninja")
     
     shutil.copy(source_presets_file, llvm_presets_file)
-    
-    env_dict = os.environ.copy().update({
-        "C":  "cl",
-        "CXX":  "cl"
-    })
+
     
     validate_command(
         "CMake Configuration",
@@ -131,8 +127,7 @@ def build_tools(preset: str):
                 "-B", str(build_dir),
                 "--preset", preset
             ],
-            cwd=proot,
-            env=env_dict
+            cwd=llvm_dir
         )
     )
     
@@ -142,10 +137,9 @@ def build_tools(preset: str):
             [
                 tools["cmake"],
                 "--build",
-                "--preset", preset
+                "--preset", preset,
             ],
-            cwd=proot,
-            env=env_dict
+            cwd=llvm_dir
         )
     )
     

@@ -10,6 +10,7 @@
             "name": "default",
             "displayName": "Default Config",
             "description": "Default build using Ninja generator",
+            "binaryDir": "${sourceDir}/build",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
