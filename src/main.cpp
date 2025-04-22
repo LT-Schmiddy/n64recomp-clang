@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
     cmd_list.push_back(NULL);
 
     // Run:
-    int retVal = execvp(cmd_str.c_str(), cmd_list.data());
+    int retVal = execvp(cmd_str.c_str(), (char *const *)cmd_list.data());
     std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << retVal << std::endl;
     return retVal;
 }

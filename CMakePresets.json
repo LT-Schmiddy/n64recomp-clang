@@ -21,14 +21,37 @@
         },
         {
             "name": "windows-x64-Debug",
-            "inherits": "default",
+            "inherits": "windows-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
             }
         },
         {
             "name": "windows-x64-Release",
+            "inherits": "windows-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        },
+        {
+            "name": "zig-windows-x64",
             "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "zig_toolchain.cmake",
+                "ZIG_TARGET": "x86_64-windows",
+                "CMAKE_SYSTEM_NAME": "Windows"
+            }
+        },
+        {
+            "name": "zig-windows-x64-Debug",
+            "inherits": "zig-windows-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "zig-windows-x64-Release",
+            "inherits": "zig-windows-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
@@ -36,6 +59,43 @@
         {
             "name": "ubuntu-x64",
             "inherits": "default"
+        },
+        {
+            "name": "ubuntu-x64-Debug",
+            "inherits": "ubuntu-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "ubuntu-x64-Release",
+            "inherits": "ubuntu-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        }, {
+            "name": "zig-linux-x64",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "zig_toolchain.cmake",
+                "ZIG_TARGET": "x86_64-linux",
+                "CMAKE_SYSTEM_NAME": "Linux"
+                
+            }
+        },
+        {
+            "name": "zig-linux-x64-Debug",
+            "inherits": "zig-linux-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "zig-linux-x64-Release",
+            "inherits": "zig-linux-x64",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
         }
     ],
     "buildPresets": [
@@ -48,8 +108,48 @@
             "configurePreset": "windows-x64"
         },
         {
+            "name": "windows-x64-Debug",
+            "configurePreset": "windows-x64-Debug"
+        },
+        {
+            "name": "windows-x64-Release",
+            "configurePreset": "windows-x64-Release"
+        },
+        {
+            "name": "zig-windows-x64",
+            "configurePreset": "zig-windows-x64"
+        },
+        {
+            "name": "zig-windows-x64-Debug",
+            "configurePreset": "zig-windows-x64-Debug"
+        },
+        {
+            "name": "zig-windows-x64-Release",
+            "configurePreset": "zig-windows-x64-Release"
+        },
+        {
             "name": "ubuntu-x64",
             "configurePreset": "ubuntu-x64"
+        },
+        {
+            "name": "ubuntu-x64-Debug",
+            "configurePreset": "ubuntu-x64-Debug"
+        },
+        {
+            "name": "ubuntu-x64-Release",
+            "configurePreset": "ubuntu-x64-Release"
+        },
+        {
+            "name": "zig-linux-x64",
+            "configurePreset": "zig-linux-x64"
+        },
+        {
+            "name": "zig-linux-x64-Debug",
+            "configurePreset": "zig-linux-x64-Debug"
+        },
+        {
+            "name": "zig-linux-x64-Release",
+            "configurePreset": "zig-linux-x64-Release"
         }
     ]
 }
