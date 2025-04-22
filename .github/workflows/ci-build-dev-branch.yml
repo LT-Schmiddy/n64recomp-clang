@@ -8,6 +8,8 @@ jobs:
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
   build-ubuntu: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@dev
+  build-macos: 
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-macos.yml@dev
 
 
       

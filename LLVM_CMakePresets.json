@@ -37,6 +37,12 @@
             "inherits": "default",
             "displayName": "ubuntu-x64",
             "description": "This build is only available on Ubuntu"
+        },
+        {
+            "name": "macos-x64",
+            "inherits": "default",
+            "displayName": "macos-x64",
+            "description": "This build is only available on Mac Os"
         }
     ],
     "buildPresets": [
@@ -51,6 +57,10 @@
         {
             "name": "ubuntu-x64",
             "configurePreset": "ubuntu-x64"
+        },
+        {
+            "name": "macos-x64",
+            "configurePreset": "macos-x64"
         }
     ]
 }
