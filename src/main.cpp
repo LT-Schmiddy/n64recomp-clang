@@ -34,6 +34,26 @@ namespace global {
 #define VCOUT if (global::verbose) std::cout
 
 // Config
+
+fs::path get_exec_path() {
+    #ifdef _WIN32
+    char path_buf[MAX_PATH];
+    DWORD result = GetModuleFileNameA(
+        NULL,
+        path_buf,
+        MAX_PATH
+    );
+    #else
+    char path_buf[PATH_MAX];
+    ssize_t size;
+
+    size = readlink("/proc/self/exe", path_buf, PATH_MAX);
+    #endif
+
+
+    return fs::path(path_buf);
+}
+
 int create_config_file() {
     ns::json out_config = {        
         {
@@ -198,7 +218,8 @@ int main(int argc, char** argv) {
     }
 
     // Initialize Globals
-    global::exec_dir = fs::path(argv[0]).parent_path();
+    VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
+    global::exec_dir = get_exec_path().parent_path();
     global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
 
     // Load Config:
@@ -231,43 +252,46 @@ int main(int argc, char** argv) {
     }
     cmd_list.push_back(NULL);
 
-#ifdef _WIN32 
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
+    // On Windows, we'll run the command as a subprocess.
+    // On Posix systems, we'll use process image replacement instead.
+    #ifdef _WIN32 
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
 
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+        ZeroMemory( &si, sizeof(si) );
+        si.cb = sizeof(si);
+        ZeroMemory( &pi, sizeof(pi) );
 
-    std::string win_args = windows_arg_string(cmd_list.data());
-    if( !CreateProcess( NULL,   // No module name (use command line)
-        (char*)win_args.c_str(),        // Command line
-        NULL,           // Process handle not inheritable
-        NULL,           // Thread handle not inheritable
-        FALSE,          // Set handle inheritance to FALSE
-        0,              // No creation flags
-        NULL,           // Use parent's environment block
-        NULL,           // Use parent's starting directory 
-        &si,            // Pointer to STARTUPINFO structure
-        &pi )           // Pointer to PROCESS_INFORMATION structure
-    ) 
-    {
-        std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << (int)GetLastError() << std::endl;
-        return 1;
-    }
-    DWORD exitCode;
-    // Wait until child process exits.
-    WaitForSingleObject( pi.hProcess, INFINITE );
-    // Get the process return code.
-    GetExitCodeProcess(pi.hProcess, &exitCode);
-    // Close process and thread handles. 
-    CloseHandle( pi.hProcess );
-    CloseHandle( pi.hThread );
-    return exitCode;
+        std::string win_args = windows_arg_string(cmd_list.data());
+        VCOUT << win_args <<std::endl;
+        if( !CreateProcess( NULL,   // No module name (use command line)
+            (char*)win_args.c_str(),        // Command line
+            NULL,           // Process handle not inheritable
+            NULL,           // Thread handle not inheritable
+            FALSE,          // Set handle inheritance to FALSE
+            0,              // No creation flags
+            NULL,           // Use parent's environment block
+            NULL,           // Use parent's starting directory 
+            &si,            // Pointer to STARTUPINFO structure
+            &pi )           // Pointer to PROCESS_INFORMATION structure
+        ) {
+            DWORD last_error = GetLastError();
+            std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << last_error << std::endl;
+            return last_error;
+        }
+        DWORD exitCode;
+        // Wait until child process exits.
+        WaitForSingleObject( pi.hProcess, INFINITE );
+        // Get the process return code.
+        GetExitCodeProcess(pi.hProcess, &exitCode);
+        // Close process and thread handles. 
+        CloseHandle( pi.hProcess );
+        CloseHandle( pi.hThread );
+        return exitCode;
 
-#else
-    int retVal = execvp(cmd_str.c_str(), (char *const *)cmd_list.data());
-    std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << retVal << std::endl;
-    return retVal;
-#endif
+    #else
+        int retVal = execvp(cmd_str.c_str(), (char *const *)cmd_list.data());
+        std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << retVal << std::endl;
+        return retVal;
+    #endif
 }
