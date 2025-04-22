@@ -218,13 +218,12 @@ int main(int argc, char** argv) {
     }
 
     // Initialize Globals
-    VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
     global::exec_dir = get_exec_path().parent_path();
     global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
 
     // Load Config:
     if (!fs::exists(global::config_file_path)) {
-        VCOUT << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
+        std::cout << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
         if (create_config_file()) {
             return 1;
         }
@@ -233,7 +232,7 @@ int main(int argc, char** argv) {
         return 1;
     }
     global::verbose = global::config[VERBOSE_KEY].get<bool>();
-    
+    VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
     // Finding command executable:
     std::string cmd_name = argv[1];
     VCOUT << "Command: " << cmd_name << std::endl;
