@@ -1,5 +1,5 @@
 {
-    "version": 9,
+    "version": 5,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 23,
@@ -10,24 +10,32 @@
             "name": "default",
             "displayName": "Default Config",
             "description": "Default build using Ninja generator",
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "${sourceDir}/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": { 
             }
         },
         {
             "name": "windows-x64",
+            "inherits": "default"
+        },
+        {
+            "name": "windows-x64-Debug",
             "inherits": "default",
-            "displayName": "Windows-x64",
-            "description": "This build is only available on Windows",
-            "environment": {
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "windows-x64-Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
             }
         },
         {
             "name": "ubuntu-x64",
-            "inherits": "default",
-            "displayName": "ubuntu-x64",
-            "description": "This build is only available on Ubuntu"
+            "inherits": "default"
         }
     ],
     "buildPresets": [
