@@ -17,7 +17,7 @@
 #ifdef _WIN32 
     #define EXEC_EXTENSION ".exe"
     #include <process.h>
-    #define execvp _execvp
+    #include <windows.h>
 #else
     #include <unistd.h>
     #define EXEC_EXTENSION ""
@@ -105,6 +105,91 @@ bool find_command(std::string cmd, fs::path* out_path) {
     return false;
 }
 
+#ifdef _WIN32
+std::string windows_arg_string(const char** commandLine) {
+    // Yes, I am blatently borrowing this code from subprocess.h
+    char* commandLineCombined;
+    subprocess_size_t len;
+    int i, j;
+    int need_quoting;
+
+    // Combine commandLine together into a single string
+    len = 0;
+    for (i = 0; commandLine[i]; i++) {
+        // for the trailing \0
+        len++;
+
+        // Quote the argument if it has a space in it
+        if (strpbrk(commandLine[i], "\t\v ") != SUBPROCESS_NULL ||
+                commandLine[i][0] == SUBPROCESS_NULL)
+            len += 2;
+
+        for (j = 0; '\0' != commandLine[i][j]; j++) {
+            switch (commandLine[i][j]) {
+            default:
+                break;
+            case '\\':
+                if (commandLine[i][j + 1] == '"') {
+                    len++;
+                }
+
+                break;
+            case '"':
+                len++;
+                break;
+            }
+            len++;
+        }
+    }
+
+    commandLineCombined = SUBPROCESS_CAST(char *, _alloca(len));
+
+    if (!commandLineCombined) {
+        return std::string("");
+    }
+
+    // Gonna re-use len to store the write index into commandLineCombined
+    len = 0;
+
+    for (i = 0; commandLine[i]; i++) {
+        if (0 != i) {
+            commandLineCombined[len++] = ' ';
+        }
+
+        need_quoting = strpbrk(commandLine[i], "\t\v ") != SUBPROCESS_NULL ||
+                                     commandLine[i][0] == SUBPROCESS_NULL;
+        if (need_quoting) {
+            commandLineCombined[len++] = '"';
+        }
+
+        for (j = 0; '\0' != commandLine[i][j]; j++) {
+            switch (commandLine[i][j]) {
+            default:
+                break;
+            case '\\':
+                if (commandLine[i][j + 1] == '"') {
+                    commandLineCombined[len++] = '\\';
+                }
+
+                break;
+            case '"':
+                commandLineCombined[len++] = '\\';
+                break;
+            }
+
+            commandLineCombined[len++] = commandLine[i][j];
+        }
+        if (need_quoting) {
+            commandLineCombined[len++] = '"';
+        }
+    }
+
+    commandLineCombined[len] = '\0';
+    // And return;
+    return std::string (commandLineCombined);
+}
+#endif
+
 int main(int argc, char** argv) {
     // If there's no command, exit now:
     if (argc < 2) {
@@ -146,8 +231,43 @@ int main(int argc, char** argv) {
     }
     cmd_list.push_back(NULL);
 
-    // Run:
+#ifdef _WIN32 
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+    std::string win_args = windows_arg_string(cmd_list.data());
+    if( !CreateProcess( NULL,   // No module name (use command line)
+        (char*)win_args.c_str(),        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi )           // Pointer to PROCESS_INFORMATION structure
+    ) 
+    {
+        std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << (int)GetLastError() << std::endl;
+        return 1;
+    }
+    DWORD exitCode;
+    // Wait until child process exits.
+    WaitForSingleObject( pi.hProcess, INFINITE );
+    // Get the process return code.
+    GetExitCodeProcess(pi.hProcess, &exitCode);
+    // Close process and thread handles. 
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );
+    return exitCode;
+
+#else
     int retVal = execvp(cmd_str.c_str(), (char *const *)cmd_list.data());
     std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << retVal << std::endl;
     return retVal;
+#endif
 }
