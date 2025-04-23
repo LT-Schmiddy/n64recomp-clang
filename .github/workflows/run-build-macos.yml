@@ -13,9 +13,9 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build-ubuntu-x64:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
+  build-macos-x64:
+    # The OS of runner that the job will run on
+    runs-on: macos-15-large
     outputs:
       essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
       all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}
