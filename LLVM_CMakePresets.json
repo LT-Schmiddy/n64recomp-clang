@@ -53,20 +53,20 @@
             "configurePreset": "default"
         },
         {
-            "name": "windows-x64",
-            "configurePreset": "windows-x64"
+            "name": "native-windows-x64",
+            "configurePreset": "native-windows-x64"
         },
         {
-            "name": "ubuntu-x64",
-            "configurePreset": "ubuntu-x64"
+            "name": "native-ubuntu-x64",
+            "configurePreset": "native-ubuntu-x64"
         },
         {
-            "name": "macos-x64",
-            "configurePreset": "macos-x64"
+            "name": "native-macos-x64",
+            "configurePreset": "native-macos-x64"
         },
         {
-            "name": "macos-aarch64",
-            "configurePreset": "macos-aarch64"
+            "name": "native-macos-aarch64",
+            "configurePreset": "native-macos-aarch64"
         }
     ]
 }
