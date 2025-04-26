@@ -184,18 +184,17 @@ def create_release_archives():
     archive_type = "xztar"
     if os.name == 'nt':
         archive_type = "zip"
-    
+        
     name_str: str = get_clang_version_string().capitalize()
     essentials_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-N64RecompEssentials")
     full_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-Full")
     os.makedirs(upload_dir, exist_ok=True)
     
     print("Creating Essentials Release Archive...")
-    shutil.make_archive(essentials_archive_path, archive_type, build_bin_essentials_dir, build_bin_essentials_dir)
+    shutil.make_archive(essentials_archive_path, archive_type, build_bin_essentials_dir.parent, build_bin_essentials_dir.name)
     
     print("Creating Full Release Archive...")
-    shutil.make_archive(full_archive_path, archive_type, build_bin_dir, build_bin_dir)
-
+    shutil.make_archive(full_archive_path, archive_type, build_bin_dir.parent, build_bin_dir.name)
 def main():
     if sys.argv[1] == "skip":
         pass
