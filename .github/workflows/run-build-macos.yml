@@ -12,6 +12,43 @@ on:
         type: string
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  build-macos-aarch64:
+    # The OS of runner that the job will run on
+    runs-on: macos-latest
+    outputs:
+      essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
+      all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          submodules: recursive
+      - name: double-checking-submodules
+        run: |-
+          git submodule update --init --recursive
+      # - name: set-up-build-tools
+      #   uses: tecolicom/actions-use-homebrew-tools@v1
+      #   with:
+      #     # homebrew packages
+      #     tools: 'cmake ninja-build'
+      - name: run-macos-build
+        run: |-
+          python ./build_llvm.py native-macos-aarch64
+      - name: archive-essential-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: essentials-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/*N64RecompEssentials*
+      - name: archive-full-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/*Full*
   # This workflow contains a single job called "build"
   build-macos-x64:
     # The OS of runner that the job will run on
@@ -37,7 +74,7 @@ jobs:
       #     tools: 'cmake ninja-build'
       - name: run-macos-build
         run: |-
-          python ./build_llvm.py macos-x64
+          python ./build_llvm.py native-macos-x64
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:

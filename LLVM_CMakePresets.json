@@ -22,9 +22,8 @@
             }
         },
         {
-            "name": "windows-x64",
+            "name": "native-windows-x64",
             "inherits": "default",
-            "displayName": "Windows-x64",
             "description": "This build is only available on Windows",
             "environment": {
                 "C":  "cl",
@@ -33,15 +32,18 @@
             }
         },
         {
-            "name": "ubuntu-x64",
+            "name": "native-ubuntu-x64",
             "inherits": "default",
-            "displayName": "ubuntu-x64",
             "description": "This build is only available on Ubuntu"
         },
         {
-            "name": "macos-x64",
+            "name": "native-macos-x64",
             "inherits": "default",
-            "displayName": "macos-x64",
+            "description": "This build is only available on Mac Os"
+        },
+        {
+            "name": "native-macos-aarch64",
+            "inherits": "default",
             "description": "This build is only available on Mac Os"
         }
     ],
@@ -61,6 +63,10 @@
         {
             "name": "macos-x64",
             "configurePreset": "macos-x64"
+        },
+        {
+            "name": "macos-aarch64",
+            "configurePreset": "macos-aarch64"
         }
     ]
 }

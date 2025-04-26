@@ -16,7 +16,7 @@
             }
         },
         {
-            "name": "windows-x64",
+            "name": "native-windows-x64",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_SYSTEM_NAME": "Windows",
@@ -24,21 +24,21 @@
             }
         },
         {
-            "name": "windows-x64-Debug",
-            "inherits": "windows-x64",
+            "name": "native-windows-x64-Debug",
+            "inherits": "native-windows-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
             }
         },
         {
-            "name": "windows-x64-Release",
-            "inherits": "windows-x64",
+            "name": "native-windows-x64-Release",
+            "inherits": "native-windows-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
         },
         {
-            "name": "linux-x64",
+            "name": "native-linux-x64",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_SYSTEM_NAME": "Linux",
@@ -46,21 +46,21 @@
             }
         },
         {
-            "name": "linux-x64-Debug",
-            "inherits": "linux-x64",
+            "name": "native-linux-x64-Debug",
+            "inherits": "native-linux-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
             }
         },
         {
-            "name": "linux-x64-Release",
-            "inherits": "linux-x64",
+            "name": "native-linux-x64-Release",
+            "inherits": "native-linux-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
         },
         {
-            "name": "macos-x64",
+            "name": "native-macos-x64",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_SYSTEM_NAME": "Darwin",
@@ -69,21 +69,21 @@
             }
         },
         {
-            "name": "macos-x64-Debug",
-            "inherits": "macos-x64",
+            "name": "native-macos-x64-Debug",
+            "inherits": "native-macos-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
             }
         },
         {
-            "name": "macos-x64-Release",
-            "inherits": "macos-x64",
+            "name": "native-macos-x64-Release",
+            "inherits": "native-macos-x64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
         },
         {
-            "name": "macos-aarch64",
+            "name": "native-macos-aarch64",
             "inherits": "default",
             "cacheVariables": {
                 "CMAKE_SYSTEM_NAME": "Darwin",
@@ -91,15 +91,15 @@
             }
         },
         {
-            "name": "macos-aarch64-Debug",
-            "inherits": "macos-aarch64",
+            "name": "native-macos-aarch64-Debug",
+            "inherits": "native-macos-aarch64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
             }
         },
         {
-            "name": "macos-aarch64-Release",
-            "inherits": "macos-aarch64",
+            "name": "native-macos-aarch64-Release",
+            "inherits": "native-macos-aarch64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
@@ -210,52 +210,52 @@
             "configurePreset": "default"
         },
         {
-            "name": "windows-x64",
-            "configurePreset": "windows-x64"
+            "name": "native-windows-x64",
+            "configurePreset": "native-windows-x64"
         },
         {
-            "name": "windows-x64-Debug",
-            "configurePreset": "windows-x64-Debug"
+            "name": "native-windows-x64-Debug",
+            "configurePreset": "native-windows-x64-Debug"
         },
         {
-            "name": "windows-x64-Release",
-            "configurePreset": "windows-x64-Release"
+            "name": "native-windows-x64-Release",
+            "configurePreset": "native-windows-x64-Release"
         },
         {
-            "name": "linux-x64",
-            "configurePreset": "linux-x64"
+            "name": "native-linux-x64",
+            "configurePreset": "native-linux-x64"
         },
         {
-            "name": "linux-x64-Debug",
-            "configurePreset": "linux-x64-Debug"
+            "name": "native-linux-x64-Debug",
+            "configurePreset": "native-linux-x64-Debug"
         },
         {
-            "name": "linux-x64-Release",
-            "configurePreset": "linux-x64-Release"
+            "name": "native-linux-x64-Release",
+            "configurePreset": "native-linux-x64-Release"
         },
         {
-            "name": "macos-x64",
-            "configurePreset": "macos-x64"
+            "name": "native-macos-x64",
+            "configurePreset": "native-macos-x64"
         },
         {
             "name": "macos-x64-Debug",
-            "configurePreset": "macos-x64-Debug"
+            "configurePreset": "native-macos-x64-Debug"
         },
         {
-            "name": "macos-x64-Release",
-            "configurePreset": "macos-x64-Release"
+            "name": "native-macos-x64-Release",
+            "configurePreset": "native-macos-x64-Release"
         },
         {
-            "name": "macos-aarch64",
-            "configurePreset": "macos-aarch64"
+            "name": "native-macos-aarch64",
+            "configurePreset": "native-macos-aarch64"
         },
         {
-            "name": "macos-aarch64-Debug",
-            "configurePreset": "macos-aarch64-Debug"
+            "name": "native-macos-aarch64-Debug",
+            "configurePreset": "native-macos-aarch64-Debug"
         },
         {
-            "name": "macos-aarch64-Release",
-            "configurePreset": "macos-aarch64-Release"
+            "name": "native-macos-aarch64-Release",
+            "configurePreset": "native-macos-aarch64-Release"
         },
         {
             "name": "zig-windows-x64",
