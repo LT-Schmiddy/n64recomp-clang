@@ -186,8 +186,8 @@ def create_release_archives():
         archive_type = "zip"
         
     name_str: str = get_clang_version_string().capitalize()
-    essentials_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-N64RecompEssentials")
-    full_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-Full")
+    essentials_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-{platform.machine()}-N64RecompEssentials")
+    full_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-{platform.machine()}-Full")
     os.makedirs(upload_dir, exist_ok=True)
     
     print("Creating Essentials Release Archive...")
