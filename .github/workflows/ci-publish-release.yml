@@ -8,9 +8,11 @@ jobs:
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master
   build-ubuntu:
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@master
+  build-macos: 
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-macos.yml@master
   publish-release:
     runs-on: windows-latest
-    needs: [build-windows, build-ubuntu]
+    needs: [build-windows, build-ubuntu, build-macos]
     steps:
       - name: checkout
         uses: actions/checkout@v4
