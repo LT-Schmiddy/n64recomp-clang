@@ -1,8 +1,15 @@
 import sys, os, shutil, subprocess, platform
 from pathlib import Path
 
+llvm_url = "https://github.com/llvm/llvm-project.git"
+# Release 21.1.6
+llvm_commit = "a832a5222e489298337fbb5876f8dcaf072c5cca"
+llvm_clone_name = "clone1"
+
 proot = Path(__file__).parent
-llvm_dir = proot.joinpath("llvm-project/llvm")
+
+clone_dir = proot.joinpath(f"llvm-project-{llvm_clone_name}")
+llvm_dir = clone_dir.joinpath("llvm")
 build_dir = llvm_dir.joinpath("build")
 build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
@@ -42,7 +49,7 @@ def find_tool(tools: dict[str, str], name: str):
 
 def validate_command(cmd_name: str, result: subprocess.CompletedProcess[str]):        
     if result.returncode != 0:
-        raise RuntimeError(f"{cmd_name} falied!")
+        raise RuntimeError(f"{cmd_name} failed!")
 
 def get_file_extensions() -> tuple[str]:
     if platform.system() == 'Linux':
@@ -106,7 +113,54 @@ def get_git_info() -> dict[str, str]:
     retVal["branch"] = git_branch_result.stdout.decode().strip()
     
     return retVal
+
+
+def download_llvm_commit():
+    tools: dict[str, str] = {}
+    find_tool(tools, "git")
+    if not clone_dir.exists():
+        # Downloading LLVM Source
+        validate_command(
+            "Downloading LLVM Source",
+            subprocess.run(
+                [
+                    tools["git"],
+                    "clone", llvm_url,
+                    clone_dir
+                ],
+                cwd=proot
+            )
+        )
+    else:
+        print("LLVM Source already downloaded...",)
     
+    # Checking Out LLVM Commit
+    validate_command(
+        f"Checking Out Commit {llvm_commit}",
+        subprocess.run(
+            [
+                tools["git"],
+                "checkout", llvm_commit
+            ],
+            cwd=clone_dir
+        )
+    )
+    
+    # CFetching LLVM Submodules
+    validate_command(
+        f"Fetching LLVM Submodules",
+        subprocess.run(
+            [
+                tools["git"],
+                "submodule",
+                "update",
+                "--init",
+                "--recursive"
+            ],
+            cwd=clone_dir
+        )
+    )
+
         
 # Steps:
 def build_tools(preset: str):
@@ -114,10 +168,10 @@ def build_tools(preset: str):
     tools: dict[str, str] = {}
     find_tool(tools, "cmake")
     find_tool(tools, "ninja")
+    download_llvm_commit();
     
     shutil.copy(source_presets_file, llvm_presets_file)
 
-    
     validate_command(
         "CMake Configuration",
         subprocess.run(
@@ -180,7 +234,6 @@ def create_essentials_dir():
             shutil.copy(src, dst)
 
 def create_release_archives():
-    
     archive_type = "xztar"
     if os.name == 'nt':
         archive_type = "zip"
@@ -195,6 +248,7 @@ def create_release_archives():
     
     print("Creating Full Release Archive...")
     shutil.make_archive(full_archive_path, archive_type, build_bin_dir.parent, build_bin_dir.name)
+    
 def main():
     if sys.argv[1] == "skip":
         pass
