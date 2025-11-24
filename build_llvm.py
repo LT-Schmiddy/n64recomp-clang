@@ -113,28 +113,26 @@ def get_git_info() -> dict[str, str]:
     retVal["branch"] = git_branch_result.stdout.decode().strip()
     
     return retVal
-    
-        
-# Steps:
-def build_tools(preset: str):
-    print("Building...")
+
+
+def download_llvm_commit():
     tools: dict[str, str] = {}
-    find_tool(tools, "cmake")
-    find_tool(tools, "ninja")
     find_tool(tools, "git")
-    
-    # Downloading LLVM Source
-    validate_command(
-        "Downloading LLVM Source",
-        subprocess.run(
-            [
-                tools["git"],
-                "clone", llvm_url,
-                clone_dir
-            ],
-            cwd=proot
+    if not clone_dir.exists():
+        # Downloading LLVM Source
+        validate_command(
+            "Downloading LLVM Source",
+            subprocess.run(
+                [
+                    tools["git"],
+                    "clone", llvm_url,
+                    clone_dir
+                ],
+                cwd=proot
+            )
         )
-    )
+    else:
+        print("LLVM Source already downloaded...",)
     
     # Checking Out LLVM Commit
     validate_command(
@@ -162,6 +160,15 @@ def build_tools(preset: str):
             cwd=clone_dir
         )
     )
+
+        
+# Steps:
+def build_tools(preset: str):
+    print("Building...")
+    tools: dict[str, str] = {}
+    find_tool(tools, "cmake")
+    find_tool(tools, "ninja")
+    download_llvm_commit();
     
     shutil.copy(source_presets_file, llvm_presets_file)
 
