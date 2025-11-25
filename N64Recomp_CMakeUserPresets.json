@@ -1,0 +1,67 @@
+{
+    "version": 9,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "binaryDir": "${sourceDir}/build",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "environment": {
+                "C":  "clang",
+                "CXX":  "clang++",
+                "ASM": "clang"
+            }
+        },
+        {
+            "name": "native-windows-x64",
+            "inherits": "default",
+            "description": "This build is only available on Windows"
+        },
+        {
+            "name": "native-ubuntu-x64",
+            "inherits": "default",
+            "description": "This build is only available on Ubuntu"
+        },
+        {
+            "name": "native-macos-x64",
+            "inherits": "default",
+            "description": "This build is only available on Mac Os"
+        },
+        {
+            "name": "native-macos-aarch64",
+            "inherits": "default",
+            "description": "This build is only available on Mac Os"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "native-windows-x64",
+            "configurePreset": "native-windows-x64"
+        },
+        {
+            "name": "native-ubuntu-x64",
+            "configurePreset": "native-ubuntu-x64"
+        },
+        {
+            "name": "native-macos-x64",
+            "configurePreset": "native-macos-x64"
+        },
+        {
+            "name": "native-macos-aarch64",
+            "configurePreset": "native-macos-aarch64"
+        }
+    ]
+}

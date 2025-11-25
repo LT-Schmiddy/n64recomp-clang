@@ -1,22 +1,23 @@
 import sys, os, shutil, subprocess, platform
 from pathlib import Path
+import build_common as bc
 
 llvm_url = "https://github.com/llvm/llvm-project.git"
 # Release 21.1.6
 llvm_commit = "a832a5222e489298337fbb5876f8dcaf072c5cca"
-llvm_clone_name = "clone1"
+llvm_clone_name = "clone2"
 
 proot = Path(__file__).parent
 
-clone_dir = proot.joinpath(f"llvm-project-{llvm_clone_name}")
-llvm_dir = clone_dir.joinpath("llvm")
+llvm_clone_dir = proot.joinpath(f"llvm-project-{llvm_clone_name}")
+llvm_dir = llvm_clone_dir.joinpath("llvm")
 build_dir = llvm_dir.joinpath("build")
 build_bin_dir = build_dir.joinpath("bin")
 build_bin_essentials_dir = build_dir.joinpath("bin_essentials")
 upload_dir = proot.joinpath("archives")
 
-source_presets_file = proot.joinpath("./LLVM_CMakePresets.json")
-llvm_presets_file = llvm_dir.joinpath("./CMakePresets.json")
+source_presets_file = proot.joinpath("./LLVM_CMakeUserPresets.json")
+llvm_presets_file = llvm_dir.joinpath("./CMakeUserPresets.json")
 
 essential_exec = [
     # Executables
@@ -38,29 +39,6 @@ essential_libs = [
     "libclang._",
     "LLVM-C._"
 ]
-# Utility Functions:
-def find_tool(tools: dict[str, str], name: str):
-    location = shutil.which(name);
-    if location is None:
-            raise RuntimeError(f"Couldn't find command '{name}'!")
-    print(F"Found '{name}' at '{location}'")
-    
-    tools.update({name: location})
-
-def validate_command(cmd_name: str, result: subprocess.CompletedProcess[str]):        
-    if result.returncode != 0:
-        raise RuntimeError(f"{cmd_name} failed!")
-
-def get_file_extensions() -> tuple[str]:
-    if platform.system() == 'Linux':
-        return "", ".so"
-    if platform.system() == 'Darwin':
-        return "", ".dylib"
-    if platform.system() == 'Windows':
-        return ".exe", ".dll"
-    
-    raise RuntimeError(f"Couldn't determine executable file extensions for '{platform.system()=}'!")
-
 
 def get_clang_version_string() -> str:    
     try:
@@ -73,7 +51,7 @@ def get_clang_version_string() -> str:
             stdout = subprocess.PIPE
         )
 
-        validate_command("Getting Built Clang Info", clang_result)
+        bc.validate_command("Getting Built Clang Info", clang_result)
         out_str = clang_result.stdout.decode()
         name_str = out_str.split("\n")[0].split("(")[0].strip()
     except OSError as e:
@@ -86,7 +64,7 @@ def get_git_info() -> dict[str, str]:
     retVal = {}
     
     tools: dict[str, str] = {}
-    find_tool(tools, "git")
+    bc.find_tool(tools, "git")
     git_commit_result = subprocess.run(
             [
                 tools["git"],
@@ -96,7 +74,7 @@ def get_git_info() -> dict[str, str]:
             cwd=llvm_dir,
             stdout = subprocess.PIPE
         )
-    validate_command("Getting LLVM Commit", git_commit_result)
+    bc.validate_command("Getting LLVM Commit", git_commit_result)
     
     git_branch_result = subprocess.run(
             [
@@ -107,7 +85,7 @@ def get_git_info() -> dict[str, str]:
             cwd=llvm_dir,
             stdout = subprocess.PIPE
         )
-    validate_command("Getting LLVM Branch", git_branch_result)
+    bc.validate_command("Getting LLVM Branch", git_branch_result)
     
     retVal["commit"] = git_commit_result.stdout.decode().strip()
     retVal["branch"] = git_branch_result.stdout.decode().strip()
@@ -116,63 +94,20 @@ def get_git_info() -> dict[str, str]:
 
 
 def download_llvm_commit():
-    tools: dict[str, str] = {}
-    find_tool(tools, "git")
-    if not clone_dir.exists():
-        # Downloading LLVM Source
-        validate_command(
-            "Downloading LLVM Source",
-            subprocess.run(
-                [
-                    tools["git"],
-                    "clone", llvm_url,
-                    clone_dir
-                ],
-                cwd=proot
-            )
-        )
-    else:
-        print("LLVM Source already downloaded...",)
-    
-    # Checking Out LLVM Commit
-    validate_command(
-        f"Checking Out Commit {llvm_commit}",
-        subprocess.run(
-            [
-                tools["git"],
-                "checkout", llvm_commit
-            ],
-            cwd=clone_dir
-        )
-    )
-    
-    # CFetching LLVM Submodules
-    validate_command(
-        f"Fetching LLVM Submodules",
-        subprocess.run(
-            [
-                tools["git"],
-                "submodule",
-                "update",
-                "--init",
-                "--recursive"
-            ],
-            cwd=clone_dir
-        )
-    )
+    bc.download_commit(llvm_url, llvm_commit, llvm_clone_dir, "LLVM")
 
         
 # Steps:
 def build_tools(preset: str):
     print("Building...")
     tools: dict[str, str] = {}
-    find_tool(tools, "cmake")
-    find_tool(tools, "ninja")
+    bc.find_tool(tools, "cmake")
+    bc.find_tool(tools, "ninja")
     download_llvm_commit();
     
     shutil.copy(source_presets_file, llvm_presets_file)
 
-    validate_command(
+    bc.validate_command(
         "CMake Configuration",
         subprocess.run(
             [
@@ -185,7 +120,7 @@ def build_tools(preset: str):
         )
     )
     
-    validate_command(
+    bc.validate_command(
         "CMake Build",
         subprocess.run(
             [
@@ -201,7 +136,7 @@ def build_tools(preset: str):
 
 def build_dummy():
     print("Preparing Dummy Build...")
-    exec_suffix, libs_suffix = get_file_extensions()
+    exec_suffix, libs_suffix = bc.get_file_extensions()
     
     os.makedirs(build_bin_dir, exist_ok=True)
     for i in essential_exec:
@@ -216,7 +151,7 @@ def build_dummy():
 
 def create_essentials_dir():
     print("Preparing Essentials...")
-    exec_suffix, libs_suffix = get_file_extensions()
+    exec_suffix, libs_suffix = bc.get_file_extensions()
     
     os.makedirs(build_bin_essentials_dir, exist_ok=True)
     for i in essential_exec:
@@ -258,7 +193,7 @@ def main():
         build_tools(sys.argv[1])
         
     create_essentials_dir()
-    create_release_archives()
+    create_release_archives() 
     
 if __name__ == '__main__':
     main()
