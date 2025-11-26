@@ -16,6 +16,10 @@ recomp_all_dir = build_archives.joinpath("recomp_all_dir")
 archive_root_name = "n64recomp_tools"
 archive_bin_name = "bin"
 
+tools_only_prefix = "N64RecompToolsOnly"
+essentials_prefix = "N64RecompAndClangEssentials"
+full_prefix = "N64RecompAndClangFull"
+
 def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]):
     archive_root = archive_parent.joinpath(archive_root_name)
     archive_bin = archive_root.joinpath(archive_bin_name)
@@ -34,7 +38,6 @@ def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]
         print(f"Copying '{src}' to '{dst}'...")
         shutil.copy(src, dst)
 
-    
     shutil.make_archive(archives_dir.joinpath(name), bc.get_archive_type(), archive_root, "")
 
 def build_all_archives():
@@ -46,17 +49,13 @@ def build_all_archives():
     recomp_all_binaries = bl.get_all_binaries()
     
     clang_ver: str = bl.get_clang_version_string().title().replace(' ', '')
-    essentials_name = f"N64RecompAndClangEssentials-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
-    all_name = f"N64RecompAndClangAll-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
+    essentials_name = f"{essentials_prefix}-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
+    full_name = f"{full_prefix}-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
     
     # Recomp Tools Only:
-    build_archive("N64RecompToolsOnly", n64recomp_tools_only_dir, n64recomp_binaries)
+    build_archive(tools_only_prefix, n64recomp_tools_only_dir, n64recomp_binaries)
     build_archive(essentials_name, recomp_essentials_dir, n64recomp_binaries + recomp_essentials_binaries)
-    build_archive(all_name, recomp_all_dir, n64recomp_binaries + recomp_all_binaries)
-    
-    
-    
-
+    build_archive(full_name, recomp_all_dir, n64recomp_binaries + recomp_all_binaries)
 
 def main():
     bs.build_tools(sys.argv[1])
