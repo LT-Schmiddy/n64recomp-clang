@@ -35,18 +35,24 @@ jobs:
           sudo apt update; sudo apt install -y cmake clang lld ninja-build python3 gcc
       - name: run-ubuntu-build
         run: |-
-          python ./build_llvm.py native-ubuntu-x64
+          python ./build_all.py native-ubuntu-x64
+      - name: archive-toolsonly-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolsonly-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/N64RecompToolsOnly*
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
           name: essentials-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/*N64RecompEssentials*
+            ./archives/N64RecompAndClangEssentials*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
           name: full-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/*Full*
+            ./archives/N64RecompAndClangFull*
 
         
