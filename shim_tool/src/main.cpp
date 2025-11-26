@@ -13,6 +13,7 @@
 #define CONFIG_FILE_NAME "n64r-shims-config.json"
 #define SEARCH_PATHS_KEY "search-paths"
 #define VERBOSE_KEY "verbose"
+#define SHORTCUTS_KEY "shortcuts"
 
 #ifdef _WIN32 
     #define EXEC_EXTENSION ".exe"
@@ -37,20 +38,18 @@ namespace global {
 
 fs::path get_exec_path() {
     #ifdef _WIN32
-    char path_buf[MAX_PATH];
-    DWORD result = GetModuleFileNameA(
-        NULL,
-        path_buf,
-        MAX_PATH
-    );
+        char path_buf[MAX_PATH];
+        DWORD result = GetModuleFileNameA(
+            NULL,
+            path_buf,
+            MAX_PATH
+        );
     #else
-    char path_buf[PATH_MAX];
-    ssize_t size;
+        char path_buf[PATH_MAX];
+        ssize_t size;
 
-    size = readlink("/proc/self/exe", path_buf, PATH_MAX);
+        size = readlink("/proc/self/exe", path_buf, PATH_MAX);
     #endif
-
-
     return fs::path(path_buf);
 }
 
@@ -61,7 +60,16 @@ int create_config_file() {
                 "./bin",
             }
         },
-        {VERBOSE_KEY, false}
+        {
+            SHORTCUTS_KEY, {
+                {"n", "./bin/N64Recomp" EXEC_EXTENSION},
+                {"o", "./bin/OfflineModRecomp" EXEC_EXTENSION},
+                {"r", "./bin/RecompModTool" EXEC_EXTENSION},
+                {"s", "./bin/RSPRecomp" EXEC_EXTENSION},
+            }
+        },
+        {VERBOSE_KEY, false},
+
     };
 
     std::ofstream out_file(global::config_file_path);
@@ -96,8 +104,28 @@ int load_config_file() {
 
 // Command Processing:
 bool find_command(std::string cmd, fs::path* out_path) {
-    ns::json search_dirs = global::config[SEARCH_PATHS_KEY];
+    // Parsing Shortcuts
+    ns::json shortcuts = global::config[SHORTCUTS_KEY];
 
+    if (shortcuts.contains(cmd)) {
+        std::string cmd_path_str = shortcuts[cmd].get<std::string>();
+        fs::path cmd_path(cmd_path_str);
+        if (cmd_path.is_relative()) {
+            cmd_path = fs::absolute(fs::path(global::exec_dir).append(cmd_path_str));
+        }
+
+        if (!fs::exists(cmd_path)) {
+            std::cerr << LOG_PREFIX "Error: The binary for shortcut '" << cmd << "' ('" << cmd_path_str << "') does not exist." << std::endl;
+            return false;
+        }
+
+        *out_path = cmd_path;
+        return true;
+        
+    }
+
+    // Searching for full command:
+    ns::json search_dirs = global::config[SEARCH_PATHS_KEY];
     for (ns::json::iterator it = search_dirs.begin(); it != search_dirs.end(); ++it) {
         std::string dir_str = it->get<std::string>();
         fs::path dir(dir_str);
@@ -236,7 +264,13 @@ int main(int argc, char** argv) {
     std::string cmd_name = argv[1];
     VCOUT << "Command: " << cmd_name << std::endl;
     fs::path cmd_path(cmd_name);
-    find_command(cmd_name, &cmd_path);
+
+    bool cmd_found = find_command(cmd_name, &cmd_path);
+
+    if (!cmd_found) {
+        std::cerr << LOG_PREFIX "Error: command '" << cmd_name << "' not found." << std::endl;
+        return 1;
+    }
 
     // Need the string object stored in memory:
     std::string cmd_str = cmd_path.string();
