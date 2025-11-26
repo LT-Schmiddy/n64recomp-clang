@@ -190,25 +190,20 @@ std::string windows_arg_string(const char** commandLine) {
     }
 
     commandLineCombined = SUBPROCESS_CAST(char *, _alloca(len));
-
     if (!commandLineCombined) {
         return std::string("");
     }
-
     // Gonna re-use len to store the write index into commandLineCombined
     len = 0;
-
     for (i = 0; commandLine[i]; i++) {
         if (0 != i) {
             commandLineCombined[len++] = ' ';
         }
-
         need_quoting = strpbrk(commandLine[i], "\t\v ") != SUBPROCESS_NULL ||
                                      commandLine[i][0] == SUBPROCESS_NULL;
         if (need_quoting) {
             commandLineCombined[len++] = '"';
         }
-
         for (j = 0; '\0' != commandLine[i][j]; j++) {
             switch (commandLine[i][j]) {
             default:
@@ -217,20 +212,17 @@ std::string windows_arg_string(const char** commandLine) {
                 if (commandLine[i][j + 1] == '"') {
                     commandLineCombined[len++] = '\\';
                 }
-
                 break;
             case '"':
                 commandLineCombined[len++] = '\\';
                 break;
             }
-
             commandLineCombined[len++] = commandLine[i][j];
         }
         if (need_quoting) {
             commandLineCombined[len++] = '"';
         }
     }
-
     commandLineCombined[len] = '\0';
     // And return;
     return std::string (commandLineCombined);
