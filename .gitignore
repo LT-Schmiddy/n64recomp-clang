@@ -1,7 +1,8 @@
 /.vscode/
 /archives/
 /build*/
-/llvm-project-*
+/clone*/
 *.pyc
 _release.md
 CMakeUserPresets.json
+
