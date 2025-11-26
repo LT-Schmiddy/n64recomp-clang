@@ -53,3 +53,9 @@ def get_binaries() -> list[Path]:
             retVal.append(binary)
     
     return retVal
+
+def main():
+    build_tools(sys.argv[1])
+    
+if __name__ == '__main__':
+    main()
