@@ -38,6 +38,7 @@ def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]
         print(f"Copying '{src}' to '{dst}'...")
         shutil.copy(src, dst)
 
+    print(f"Creating '{name}'...")
     shutil.make_archive(archives_dir.joinpath(name), bc.get_archive_type(), archive_root, "")
 
 def build_all_archives():
@@ -49,11 +50,12 @@ def build_all_archives():
     recomp_all_binaries = bl.get_all_binaries()
     
     clang_ver: str = bl.get_clang_version_string().title().replace(' ', '')
+    toolsonly_name = f"{tools_only_prefix}-{platform.system()}-{platform.machine()}"
     essentials_name = f"{essentials_prefix}-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
     full_name = f"{full_prefix}-{clang_ver}-MipsOnly-{platform.system()}-{platform.machine()}"
     
     # Recomp Tools Only:
-    build_archive(tools_only_prefix, n64recomp_tools_only_dir, n64recomp_binaries)
+    build_archive(toolsonly_name, n64recomp_tools_only_dir, n64recomp_binaries)
     build_archive(essentials_name, recomp_essentials_dir, n64recomp_binaries + recomp_essentials_binaries)
     build_archive(full_name, recomp_all_dir, n64recomp_binaries + recomp_all_binaries)
 
