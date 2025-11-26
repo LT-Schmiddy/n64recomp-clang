@@ -58,7 +58,7 @@ jobs:
   # This workflow contains a single job called "build"
   build-macos-x64:
     # The OS of runner that the job will run on
-    runs-on: macos-13
+    runs-on: macos-15-intel
     outputs:
       essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
       all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}
