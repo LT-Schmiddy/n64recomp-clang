@@ -32,7 +32,7 @@
             }
         },
         {
-            "name": "native-ubuntu-x64",
+            "name": "native-linux-x64",
             "inherits": "default",
             "description": "This build is only available on Ubuntu"
         },
@@ -58,7 +58,7 @@
         },
         {
             "name": "native-ubuntu-x64",
-            "configurePreset": "native-ubuntu-x64"
+            "configurePreset": "native-linux-x64"
         },
         {
             "name": "native-macos-x64",

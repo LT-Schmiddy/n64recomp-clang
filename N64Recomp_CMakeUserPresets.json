@@ -22,7 +22,7 @@
             "description": "This build is only available on Windows"
         },
         {
-            "name": "native-ubuntu-x64",
+            "name": "native-linux-x64",
             "inherits": "default",
             "description": "This build is only available on Ubuntu"
         },
@@ -47,7 +47,7 @@
             "configurePreset": "native-windows-x64"
         },
         {
-            "name": "native-ubuntu-x64",
+            "name": "native-linux-x64",
             "configurePreset": "native-ubuntu-x64"
         },
         {
