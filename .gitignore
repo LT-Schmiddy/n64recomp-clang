@@ -3,6 +3,7 @@
 /build*/
 /clone*/
 *.pyc
+/shim_tool/build
 _release.md
 CMakeUserPresets.json
 

@@ -59,7 +59,6 @@ int create_config_file() {
         {
             SEARCH_PATHS_KEY, {
                 "./bin",
-                "./bin_essentials"
             }
         },
         {VERBOSE_KEY, false}

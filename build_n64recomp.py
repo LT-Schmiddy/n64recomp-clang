@@ -59,7 +59,7 @@ def build_tools(preset: str):
     os.remove(n64recomp_presets_file)
 
 
-def get_essential_binaries() -> list[Path]:
+def get_binaries() -> list[Path]:
     retVal = []
     exec_suffix, libs_suffix = bc.get_file_extensions()
     

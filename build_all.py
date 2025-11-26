@@ -2,6 +2,7 @@ import sys, os, shutil, subprocess, platform
 from pathlib import Path
 
 import build_common as bc
+import build_shim_tool as bs
 import build_n64recomp as bn
 import build_llvm as bl
 
@@ -21,6 +22,13 @@ def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]
     
     os.makedirs(archive_bin, exist_ok=True)
     
+    shim_binaries = bs.get_binaries()
+    
+    for src in shim_binaries:
+        dst = archive_root.joinpath(src.name)
+        print(f"Copying '{src}' to '{dst}'...")
+        shutil.copy(src, dst)
+    
     for src in included_binaries:
         dst = archive_bin.joinpath(src.name)
         print(f"Copying '{src}' to '{dst}'...")
@@ -33,7 +41,7 @@ def build_all_archives():
     os.makedirs(archives_dir, exist_ok=True)
     os.makedirs(build_archives, exist_ok=True)
     
-    n64recomp_binaries = bn.get_essential_binaries()
+    n64recomp_binaries = bn.get_binaries()
     recomp_essentials_binaries = bl.get_essential_binaries()
     recomp_all_binaries = bl.get_all_binaries()
     
@@ -51,6 +59,7 @@ def build_all_archives():
 
 
 def main():
+    bs.build_tools(sys.argv[1])
     bn.build_tools(sys.argv[1])
     bl.build_tools(sys.argv[1])
     
