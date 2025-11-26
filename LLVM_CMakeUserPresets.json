@@ -57,7 +57,7 @@
             "configurePreset": "native-windows-x64"
         },
         {
-            "name": "native-ubuntu-x64",
+            "name": "native-linux-x64",
             "configurePreset": "native-linux-x64"
         },
         {
