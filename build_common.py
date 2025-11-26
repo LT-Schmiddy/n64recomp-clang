@@ -24,6 +24,12 @@ def get_file_extensions() -> tuple[str]:
     
     raise RuntimeError(f"Couldn't determine executable file extensions for '{platform.system()=}'!")
 
+def get_archive_type() -> str:
+    archive_type = "xztar"
+    if os.name == 'nt':
+        archive_type = "zip"
+        
+    return archive_type
 
 def download_commit(repo_url: str, commit_id: str, clone_dir: Path, repo_name: str = "Repo"):
     tools: dict[str, str] = {}

@@ -14,11 +14,6 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
-            },
-            "environment": {
-                "C":  "clang",
-                "CXX":  "clang++",
-                "ASM": "clang"
             }
         },
         {

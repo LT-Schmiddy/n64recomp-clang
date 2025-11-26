@@ -26,7 +26,7 @@
             "inherits": "default",
             "description": "This build is only available on Windows",
             "environment": {
-                "C":  "cl",
+                "CC":  "cl",
                 "CXX":  "cl",
                 "ASM": "cl"
             }
