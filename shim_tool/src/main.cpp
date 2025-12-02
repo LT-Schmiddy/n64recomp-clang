@@ -8,6 +8,10 @@
 
 #include "subprocess.h"
 #include "json.hpp"
+#include "cxxopts.hpp"
+
+
+#define START_COMMAND_STR "--"
 
 #define LOG_PREFIX "N64R-SHIMS: "
 #define CONFIG_FILE_NAME "n64r-shims-config.json"
@@ -34,7 +38,13 @@ namespace global {
 }
 #define VCOUT if (global::verbose) std::cout
 
-// Config
+#define CMD_ARG_TO_ARGC(arg) arg + parse_size
+#define ARGC_TO_CMD_ARG(arg) arg - parse_size
+
+bool has_command = false;
+int parse_size = 1;
+int command_argc = 0;
+const char** command_argv = NULL;
 
 fs::path get_exec_path() {
     #ifdef _WIN32
@@ -64,8 +74,8 @@ int create_config_file() {
             SHORTCUTS_KEY, {
                 {"n", "./bin/N64Recomp" EXEC_EXTENSION},
                 {"o", "./bin/OfflineModRecomp" EXEC_EXTENSION},
-                {"r", "./bin/RecompModTool" EXEC_EXTENSION},
-                {"s", "./bin/RSPRecomp" EXEC_EXTENSION},
+                {"m", "./bin/RecompModTool" EXEC_EXTENSION},
+                {"r", "./bin/RSPRecomp" EXEC_EXTENSION},
             }
         },
         {VERBOSE_KEY, false},
@@ -229,11 +239,27 @@ std::string windows_arg_string(const char** commandLine) {
 }
 #endif
 
-int main(int argc, char** argv) {
-    // If there's no command, exit now:
-    if (argc < 2) {
-        std::cerr << LOG_PREFIX "Error: No command specified." << std::endl;
-        return 1;
+int main(int argc, const char** argv) {
+    for (; parse_size < argc; parse_size++){
+        if (strncmp(argv[parse_size], START_COMMAND_STR, 3) == 0) {
+            parse_size++;
+            has_command = true;
+            command_argc = argc - parse_size;
+            command_argv = &argv[parse_size];
+            break;
+        }
+    }
+    
+    cxxopts::Options options("nrs", "N64 Recompiled Tool Collection Shim. Common tools for development of N64 Recompiled ports and mods.");
+    options.add_options()
+        ("h,help", "Print usage")
+        ("v,verbose", "Enable verbose output");
+    options.custom_help("[OPTIONS...] -- [SHIM COMMAND...]");
+
+    auto result = options.parse(parse_size, argv);
+    if (result.count("help")) {
+      std::cout << options.help() << std::endl;
+      return 0;
     }
 
     // Initialize Globals
@@ -252,8 +278,15 @@ int main(int argc, char** argv) {
     }
     global::verbose = global::config[VERBOSE_KEY].get<bool>();
     VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
+
+        // If there's no command, exit now:
+    if (!has_command) {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+
     // Finding command executable:
-    std::string cmd_name = argv[1];
+    std::string cmd_name = command_argv[0];
     VCOUT << "Command: " << cmd_name << std::endl;
     fs::path cmd_path(cmd_name);
 
@@ -270,9 +303,9 @@ int main(int argc, char** argv) {
     // Creating new arg list;
     std::vector<const char*> cmd_list;
     cmd_list.push_back(cmd_str.c_str());
-    for (int i = 2; i < argc; i++) {
-        VCOUT << "Arg: " << argv[i] << std::endl;
-        cmd_list.push_back(argv[i]);
+    for (int i = 1; i < command_argc; i++) {
+        VCOUT << "Arg: " << command_argv[i] << std::endl;
+        cmd_list.push_back(command_argv[i]);
     }
     cmd_list.push_back(NULL);
 

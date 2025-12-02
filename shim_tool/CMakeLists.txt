@@ -4,7 +4,7 @@ project(n64recomp-clang-shims)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SHIM_TOOL_NAME n64r)
+set(SHIM_TOOL_NAME nrs)
 
 add_executable(${SHIM_TOOL_NAME})
 

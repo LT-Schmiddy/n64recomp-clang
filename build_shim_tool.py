@@ -10,7 +10,7 @@ build_bin_dir = build_dir.joinpath("bin")
 
 # In case we add more tools later.
 exec_names = [
-    "n64r._"
+    "nrs._"
 ]
 
 def build_tools(preset: str):
