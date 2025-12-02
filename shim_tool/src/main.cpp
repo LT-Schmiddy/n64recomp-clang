@@ -3,45 +3,24 @@
 #include <fstream>
 #include <vector>
 
-// Windows
-
-
 #include "subprocess.h"
-#include "json.hpp"
-#include "cxxopts.hpp"
-
+#include "./globals.hpp"
+#include "./config.hpp"
 
 #define START_COMMAND_STR "--"
 
-#define LOG_PREFIX "N64R-SHIMS: "
-#define CONFIG_FILE_NAME "n64r-shims-config.json"
-#define SEARCH_PATHS_KEY "search-paths"
-#define VERBOSE_KEY "verbose"
-#define SHORTCUTS_KEY "shortcuts"
-
 #ifdef _WIN32 
-    #define EXEC_EXTENSION ".exe"
     #include <process.h>
     #include <windows.h>
 #else
     #include <unistd.h>
-    #define EXEC_EXTENSION ""
 #endif
 
-namespace fs = std::filesystem;
-namespace ns = nlohmann;
-namespace global {
-    fs::path exec_dir;
-    fs::path config_file_path;
-    ns::json config;
-    bool verbose = true;
-}
-#define VCOUT if (global::verbose) std::cout
 
 #define CMD_ARG_TO_ARGC(arg) arg + parse_size
 #define ARGC_TO_CMD_ARG(arg) arg - parse_size
 
-bool has_command = false;
+bool has_manual_command = false;
 int parse_size = 1;
 int command_argc = 0;
 const char** command_argv = NULL;
@@ -61,105 +40,6 @@ fs::path get_exec_path() {
         size = readlink("/proc/self/exe", path_buf, PATH_MAX);
     #endif
     return fs::path(path_buf);
-}
-
-int create_config_file() {
-    ns::json out_config = {        
-        {
-            SEARCH_PATHS_KEY, {
-                "./bin",
-            }
-        },
-        {
-            SHORTCUTS_KEY, {
-                {"n", "./bin/N64Recomp" EXEC_EXTENSION},
-                {"o", "./bin/OfflineModRecomp" EXEC_EXTENSION},
-                {"m", "./bin/RecompModTool" EXEC_EXTENSION},
-                {"r", "./bin/RSPRecomp" EXEC_EXTENSION},
-            }
-        },
-        {VERBOSE_KEY, false},
-
-    };
-
-    std::ofstream out_file(global::config_file_path);
-    if (out_file.is_open()) {
-        out_file << out_config.dump(4);
-        out_file.close();
-    } else {
-        std::cerr << LOG_PREFIX "Error: Config at '" << global::config_file_path.string().c_str() << "' could not be created." << std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-
-int load_config_file() {
-    std::ifstream in_file(global::config_file_path);
-    if (in_file.is_open()) {
-        try {
-            in_file >> global::config;
-        }
-        catch (ns::json::parse_error& ex) {
-            std::cerr << LOG_PREFIX "JSON parse error at byte " << ex.byte << std::endl;
-            return 1;
-        }
-        in_file.close();
-    } else {
-        std::cerr << LOG_PREFIX "Error: Config at '" << global::config_file_path.string().c_str() << "' could not be opened." << std::endl;
-        return 1;
-    }
-    return 0;
-}
-
-// Command Processing:
-bool find_command(std::string cmd, fs::path* out_path) {
-    // Parsing Shortcuts
-    ns::json shortcuts = global::config[SHORTCUTS_KEY];
-
-    if (shortcuts.contains(cmd)) {
-        std::string cmd_path_str = shortcuts[cmd].get<std::string>();
-        fs::path cmd_path(cmd_path_str);
-        if (cmd_path.is_relative()) {
-            cmd_path = fs::absolute(fs::path(global::exec_dir).append(cmd_path_str));
-        }
-
-        if (!fs::exists(cmd_path)) {
-            std::cerr << LOG_PREFIX "Error: The binary for shortcut '" << cmd << "' ('" << cmd_path_str << "') does not exist." << std::endl;
-            return false;
-        }
-
-        *out_path = cmd_path;
-        return true;
-        
-    }
-
-    // Searching for full command:
-    ns::json search_dirs = global::config[SEARCH_PATHS_KEY];
-    for (ns::json::iterator it = search_dirs.begin(); it != search_dirs.end(); ++it) {
-        std::string dir_str = it->get<std::string>();
-        fs::path dir(dir_str);
-        if (dir.is_relative()) {
-            dir = fs::absolute(fs::path(global::exec_dir).append(dir_str));
-        }
-        VCOUT << "Searching " << dir << std::endl;
-
-        if (!fs::exists(dir)) {
-            continue;
-        }
-
-        for (auto const& dir_entry : std::filesystem::directory_iterator(dir)) {
-            VCOUT << dir_entry << '\n';
-
-            fs::path candidate(dir_entry);
-            if (candidate.filename().replace_extension("").string() == cmd) {
-                VCOUT << "FOUND " << candidate << '\n';
-                *out_path = candidate;
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 #ifdef _WIN32
@@ -243,7 +123,7 @@ int main(int argc, const char** argv) {
     for (; parse_size < argc; parse_size++){
         if (strncmp(argv[parse_size], START_COMMAND_STR, 3) == 0) {
             parse_size++;
-            has_command = true;
+            has_manual_command = true;
             command_argc = argc - parse_size;
             command_argv = &argv[parse_size];
             break;
@@ -252,35 +132,49 @@ int main(int argc, const char** argv) {
     
     cxxopts::Options options("nrs", "N64 Recompiled Tool Collection Shim. Common tools for development of N64 Recompiled ports and mods.");
     options.add_options()
-        ("h,help", "Print usage")
-        ("v,verbose", "Enable verbose output");
-    options.custom_help("[OPTIONS...] -- [SHIM COMMAND...]");
+        ("h,help", "Print usage and then quit")
+        ("l,list", "List available commands and then quit")
+        ("v,verbose", "Enable verbose output")
 
-    auto result = options.parse(parse_size, argv);
-    if (result.count("help")) {
-      std::cout << options.help() << std::endl;
-      return 0;
+    ;
+
+    options.custom_help("[OPTIONS...] -- [SHIM COMMAND...]");
+    global::option_args = options.parse(parse_size, argv);
+
+
+    if (global::option_args.count("help")) {
+        std::cout << options.help() << std::endl;
+        if (!global::option_args.count("list")) {
+            return 0;
+        }
     }
 
     // Initialize Globals
     global::exec_dir = get_exec_path().parent_path();
     global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
+    global::verbose = global::option_args[VERBOSE_KEY].as<bool>();
 
     // Load Config:
     if (!fs::exists(global::config_file_path)) {
-        std::cout << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
-        if (create_config_file()) {
+        VCOUT << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
+        if (config_create_file()) {
             return 1;
         }
     }
-    if (load_config_file()) {
+    if (config_load_file()) {
         return 1;
     }
-    global::verbose = global::config[VERBOSE_KEY].get<bool>();
+
+    if (global::option_args.count("list")) {
+      config_list_commands();
+      return 0;
+    }
+
+
     VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
 
         // If there's no command, exit now:
-    if (!has_command) {
+    if (!has_manual_command) {
         std::cout << options.help() << std::endl;
         return 0;
     }
@@ -290,7 +184,7 @@ int main(int argc, const char** argv) {
     VCOUT << "Command: " << cmd_name << std::endl;
     fs::path cmd_path(cmd_name);
 
-    bool cmd_found = find_command(cmd_name, &cmd_path);
+    bool cmd_found = config_find_command(cmd_name, &cmd_path);
 
     if (!cmd_found) {
         std::cerr << LOG_PREFIX "Error: command '" << cmd_name << "' not found." << std::endl;
