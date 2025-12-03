@@ -1,6 +1,8 @@
 import sys, os, shutil, subprocess, platform
 from pathlib import Path
 
+print(f"Python Version {sys.version}")
+
 import build_common as bc
 import build_shim_tool as bs
 import build_n64recomp as bn
