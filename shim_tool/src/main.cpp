@@ -16,10 +16,6 @@
     #include <unistd.h>
 #endif
 
-
-#define CMD_ARG_TO_ARGC(arg) arg + parse_size
-#define ARGC_TO_CMD_ARG(arg) arg - parse_size
-
 bool requires_manual_command = false;
 bool has_manual_command = false;
 int parse_size = 1;
@@ -135,24 +131,33 @@ int main(int argc, const char** argv) {
     command_argc = argc - parse_size;
     command_argv = &argv[parse_size];
     
-    cxxopts::Options options("nrs", "N64 Recompiled Tool Collection Shim. Common tools for development of N64 Recompiled ports and mods.");
+    cxxopts::Options options("nrs", LONG_PROGRAM_NAME ". Common tools for development of N64 Recompiled ports and mods.");
     options.add_options()
-        ("h,help", "Print usage and then quit")
-        ("l,list", "List available commands and then quit")
+        ("h,help", "Prints usage infomation and then quits")
+        ("l,list", "List available commands and then quits")
+        ("i,info", "Print version, usage infomation, and available commands then quits")
         ("d,debug", "Enable debug output")
-
+        ("v,version", "Print version info and exit")
     ;
 
     options.custom_help("[OPTIONS... --] [SHIM COMMAND...]");
-    global::option_args = options.parse(parse_size, argv);
 
+    try {
+        global::option_args = options.parse(parse_size, argv);
+    } catch (cxxopts::exceptions::exception e) {
+        std::cerr << LOG_PREFIX "Error in parsing arguments - " << e.what() << std::endl;
+        return 1;
+    }
 
     // If we're only printing the help message, no need to load the config. So let's do this now.
     if (global::option_args.count("help")) {
         std::cout << options.help() << std::endl;
-        if (!global::option_args.count("list")) {
-            return 0;
-        }
+        return 0;
+    }
+
+    if (global::option_args.count("version")) {
+        std::cout << get_long_version_string() << std::endl;
+        return 0;
     }
 
     // Initialize Globals
@@ -171,9 +176,8 @@ int main(int argc, const char** argv) {
         return 1;
     }
 
-        // If there's no command, exit now:
-    if (argc == 1 || (requires_manual_command && !has_manual_command)) {
-        std::cerr << LOG_PREFIX "No command specified. Printing usage information..." << std::endl;
+    if (global::option_args.count("info")) {
+        std::cout << get_long_version_string() << std::endl;
         std::cout << options.help() << std::endl;
         config_list_commands();
         return 0;
@@ -183,6 +187,14 @@ int main(int argc, const char** argv) {
     if (global::option_args.count("list")) {
       config_list_commands();
       return 0;
+    }
+
+    // If there's no command, exit now:
+    if (argc == 1 || (requires_manual_command && !has_manual_command) || global::option_args.count("info")) {
+        std::cerr << LOG_PREFIX "No command specified. Printing usage information..." << std::endl;
+        std::cout << options.help() << std::endl;
+        config_list_commands();
+        return 0;
     }
 
     VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;

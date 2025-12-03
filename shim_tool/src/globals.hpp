@@ -5,6 +5,8 @@
 #include "json.hpp"
 #include "cxxopts.hpp"
 
+#include "./version.hpp"
+
 namespace fs = std::filesystem;
 namespace ns = nlohmann;
 namespace global {
