@@ -166,7 +166,7 @@ int main(int argc, const char** argv) {
     global::verbose = global::option_args[VERBOSE_KEY].as<bool>();
 
     // Initialize Globals
-    // global::exec_dir = get_exec_path().parent_path();
+    global::exec_dir = get_exec_path().parent_path();
     // global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
 
     // Load Config:
