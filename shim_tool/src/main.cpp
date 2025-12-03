@@ -163,21 +163,24 @@ int main(int argc, const char** argv) {
         return 0;
     }
 
-    // Initialize Globals
-    global::exec_dir = get_exec_path().parent_path();
-    global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
     global::verbose = global::option_args[VERBOSE_KEY].as<bool>();
 
+    // Initialize Globals
+    // global::exec_dir = get_exec_path().parent_path();
+    // global::config_file_path = fs::path(global::exec_dir).append(CONFIG_FILE_NAME);
+
     // Load Config:
-    if (!fs::exists(global::config_file_path)) {
-        VCOUT << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
-        if (config_create_file()) {
-            return 1;
-        }
-    }
-    if (config_load_file()) {
-        return 1;
-    }
+    // if (!fs::exists(global::config_file_path)) {
+    //     VCOUT << LOG_PREFIX "Missing config file at '" << global::config_file_path.string().c_str() << "'. Creating..." << std::endl;
+    //     if (config_create_file()) {
+    //         return 1;
+    //     }
+    // }
+    // if (config_load_file()) {
+    //     return 1;
+    // }
+
+    config_init();
 
     if (global::option_args.count("info")) {
         std::cout << options.help() << std::endl;

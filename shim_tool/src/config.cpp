@@ -1,42 +1,42 @@
 #include <fstream>
 #include "./config.hpp"
 
-int config_create_file() {
-    ns::json out_config = {        
+ns::json config_get_default() {
+    return {        
         {
             CONFIG_SEARCH_PATHS_KEY, {
-                "./bin",
+                "./nrs_bin",
             }
         },
         {
             CONFIG_SHORTCUTS_KEY, {
                 {"n", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/N64Recomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/N64Recomp" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "Recompiler for N64 binaries"}
                     }
                 },
                 {"o", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/OfflineModRecomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/OfflineModRecomp" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "Recompiles data from .nrm into C"}
                     }
                 },
                 {"m", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/RecompModTool" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/RecompModTool" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "Generates .nrm mod files"}
                     }
                 },
                 {"r", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/RSPRecomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/RSPRecomp" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "RSP Recompiler for N64 binaries"}
                     }
                 },
                 {"c", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/clang" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/clang" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM C compiler with MIPS support only"}
                     }
                 },
                 {"l", {
-                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/ld.lld" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_PATH_KEY, "./nrs_bin/ld.lld" EXEC_EXTENSION},
                        {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM Linker with MIPS support only"}
                     }
                 },
@@ -45,7 +45,14 @@ int config_create_file() {
             
         }
     };
+}
 
+void config_init() {
+    global::config = config_get_default();
+}
+
+int config_create_file() {
+    ns::json out_config = config_get_default();
     std::ofstream out_file(global::config_file_path);
     if (out_file.is_open()) {
         out_file << out_config.dump(4);

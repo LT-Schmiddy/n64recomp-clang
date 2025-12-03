@@ -14,7 +14,7 @@ recomp_essentials_dir = build_archives.joinpath("recomp_essentials_dir")
 recomp_all_dir = build_archives.joinpath("recomp_all_dir")
 
 archive_root_name = "n64recomp_tools"
-archive_bin_name = "bin"
+archive_bin_name = "nrs_bin"
 
 tools_only_prefix = "N64RecompToolsOnly"
 essentials_prefix = "N64RecompAndClangEssentials"
