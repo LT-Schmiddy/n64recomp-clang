@@ -38,7 +38,7 @@ jobs:
           args: install ninja python
       - name: run-windows-build
         run: |-
-          C:/python314/python.exe ./build_all.py native-windows-x64
+          python ./build_all.py native-windows-x64
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:
