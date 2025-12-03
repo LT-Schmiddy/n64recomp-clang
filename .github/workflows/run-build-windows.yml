@@ -39,7 +39,7 @@ jobs:
       - name: run-windows-build
         run: |-
           python --version
-          python ./build_all.py native-windows-x64
+          C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./build_all.py native-windows-x64
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:
