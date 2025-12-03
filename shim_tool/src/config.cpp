@@ -165,7 +165,7 @@ void config_list_commands() {
             dir = fs::absolute(fs::path(global::exec_dir).append(dir_str));
         }
 
-        std::cout << "Location: " << dir << std::endl;
+        std::cout << "\tLocation: " << dir << std::endl;
         if (!fs::exists(dir)) {
             continue;
         }
@@ -174,7 +174,7 @@ void config_list_commands() {
             fs::path candidate(dir_entry);
 
             if (candidate.filename().extension() == EXEC_EXTENSION) {
-                std::cout << "\t" << candidate.filename().replace_extension("").string() << std::endl;
+                std::cout << "\t\t" << candidate.filename().replace_extension("").string() << std::endl;
             }
         }
     }
