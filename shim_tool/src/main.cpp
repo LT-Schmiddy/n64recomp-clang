@@ -20,6 +20,7 @@
 #define CMD_ARG_TO_ARGC(arg) arg + parse_size
 #define ARGC_TO_CMD_ARG(arg) arg - parse_size
 
+bool requires_manual_command = false;
 bool has_manual_command = false;
 int parse_size = 1;
 int command_argc = 0;
@@ -120,28 +121,33 @@ std::string windows_arg_string(const char** commandLine) {
 #endif
 
 int main(int argc, const char** argv) {
-    for (; parse_size < argc; parse_size++){
-        if (strncmp(argv[parse_size], START_COMMAND_STR, 3) == 0) {
-            parse_size++;
-            has_manual_command = true;
-            command_argc = argc - parse_size;
-            command_argv = &argv[parse_size];
-            break;
+    if (argc > 1 && argv[1][0] == '-') {
+        requires_manual_command = true;
+        for (; parse_size < argc; parse_size++){
+            if (strncmp(argv[parse_size], START_COMMAND_STR, 3) == 0) {
+                parse_size++;
+                has_manual_command = true;
+                break;
+            }
         }
     }
+
+    command_argc = argc - parse_size;
+    command_argv = &argv[parse_size];
     
     cxxopts::Options options("nrs", "N64 Recompiled Tool Collection Shim. Common tools for development of N64 Recompiled ports and mods.");
     options.add_options()
         ("h,help", "Print usage and then quit")
         ("l,list", "List available commands and then quit")
-        ("v,verbose", "Enable verbose output")
+        ("d,debug", "Enable debug output")
 
     ;
 
-    options.custom_help("[OPTIONS...] -- [SHIM COMMAND...]");
+    options.custom_help("[OPTIONS... --] [SHIM COMMAND...]");
     global::option_args = options.parse(parse_size, argv);
 
 
+    // If we're only printing the help message, no need to load the config. So let's do this now.
     if (global::option_args.count("help")) {
         std::cout << options.help() << std::endl;
         if (!global::option_args.count("list")) {
@@ -165,19 +171,22 @@ int main(int argc, const char** argv) {
         return 1;
     }
 
+        // If there's no command, exit now:
+    if (argc == 1 || (requires_manual_command && !has_manual_command)) {
+        std::cerr << LOG_PREFIX "No command specified. Printing usage information..." << std::endl;
+        std::cout << options.help() << std::endl;
+        config_list_commands();
+        return 0;
+    }
+
+
     if (global::option_args.count("list")) {
       config_list_commands();
       return 0;
     }
 
-
     VCOUT << LOG_PREFIX << "LOCATION = " << get_exec_path() << std::endl;
 
-        // If there's no command, exit now:
-    if (!has_manual_command) {
-        std::cout << options.help() << std::endl;
-        return 0;
-    }
 
     // Finding command executable:
     std::string cmd_name = command_argv[0];

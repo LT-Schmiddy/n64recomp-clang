@@ -10,11 +10,39 @@ int config_create_file() {
         },
         {
             CONFIG_SHORTCUTS_KEY, {
-                {"n", "./bin/N64Recomp" EXEC_EXTENSION},
-                {"o", "./bin/OfflineModRecomp" EXEC_EXTENSION},
-                {"m", "./bin/RecompModTool" EXEC_EXTENSION},
-                {"r", "./bin/RSPRecomp" EXEC_EXTENSION},
+                {"n", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/N64Recomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "Recompiler for N64 binaries"}
+                    }
+                },
+                {"o", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/OfflineModRecomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "Recompiles data from .nrm into C"}
+                    }
+                },
+                {"m", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/RecompModTool" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "Generates .nrm mod files"}
+                    }
+                },
+                {"r", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/RSPRecomp" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "RSP Recompiler for N64 binaries"}
+                    }
+                },
+                {"c", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/clang" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM C compiler with MIPS support only."}
+                    }
+                },
+                {"l", {
+                       {CONFIG_SHORTCUT_PATH_KEY, "./bin/ld.lld" EXEC_EXTENSION},
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM Linker with MIPS support only."}
+                    }
+                },
             }
+
+            
         }
     };
 
@@ -55,7 +83,12 @@ bool config_find_command(std::string cmd, fs::path* out_path) {
     ns::json shortcuts = global::config[CONFIG_SHORTCUTS_KEY];
 
     if (shortcuts.contains(cmd)) {
-        std::string cmd_path_str = shortcuts[cmd].get<std::string>();
+        ns::json shortcut_cmd = shortcuts[cmd];
+        if (!shortcut_cmd.contains(CONFIG_SHORTCUT_PATH_KEY)){
+            std::cerr << LOG_PREFIX "Error: The shortcut '" << cmd << "' is missing a " << CONFIG_SHORTCUT_PATH_KEY << " entry" << std::endl;
+            return false;
+        }
+        std::string cmd_path_str = shortcut_cmd["path"].get<std::string>();
         fs::path cmd_path(cmd_path_str);
         if (cmd_path.is_relative()) {
             cmd_path = fs::absolute(fs::path(global::exec_dir).append(cmd_path_str));
@@ -102,7 +135,27 @@ bool config_find_command(std::string cmd, fs::path* out_path) {
 void config_list_commands() {
     ns::json shortcuts = global::config[CONFIG_SHORTCUTS_KEY];
 
-    std::cout << "Available Tools:" << std::endl;
+    std::cout << "Shim Commands:" << std::endl;
+    std::cout << "\n-> Shortcuts:" << std::endl;
+    for (ns::json::iterator it = shortcuts.begin(); it != shortcuts.end(); ++it) {
+        std::string key = it.key();
+        std::string path = "ERROR - NOT SPECIFIED";
+        if (it.value().contains(CONFIG_SHORTCUT_PATH_KEY)){
+            path = it.value()[CONFIG_SHORTCUT_PATH_KEY].get<std::string>();
+        }
+        std::cout << "\t" << key.c_str() << " : " << path;
+
+
+        if (it.value().contains(CONFIG_SHORTCUT_COMMENT_KEY)){
+            std::string comment = it.value()[CONFIG_SHORTCUT_COMMENT_KEY].get<std::string>();
+            std::cout << " -> " << comment << std::endl;
+        } else {
+            std::cout << " (No Comment)" << std::endl;
+        }
+
+    }
+
+    std::cout << "\n-> All Available Tools:" << std::endl;
 
     ns::json search_dirs = global::config[CONFIG_SEARCH_PATHS_KEY];
     for (ns::json::iterator it = search_dirs.begin(); it != search_dirs.end(); ++it) {
@@ -117,7 +170,6 @@ void config_list_commands() {
             continue;
         }
 
-
         for (auto const& dir_entry : std::filesystem::directory_iterator(dir)) {
             fs::path candidate(dir_entry);
 
@@ -125,10 +177,5 @@ void config_list_commands() {
                 std::cout << "\t" << candidate.filename().replace_extension("").string() << std::endl;
             }
         }
-    }
-
-    std::cout << "Shortcuts:" << std::endl;
-    for (ns::json::iterator it = shortcuts.begin(); it != shortcuts.end(); ++it) {
-        std::cout << "\t" << it.key().c_str() << " : " << it.value().get<std::string>() << std::endl;
     }
 }

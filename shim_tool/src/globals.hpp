@@ -26,5 +26,5 @@ namespace global {
 #define LOG_PREFIX "N64R-SHIMS: "
 #define CONFIG_FILE_NAME "n64r-shims-config.json"
 #define SEARCH_PATHS_KEY "search-paths"
-#define VERBOSE_KEY "verbose"
+#define VERBOSE_KEY "debug"
 #define SHORTCUTS_KEY "shortcuts"
