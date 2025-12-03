@@ -118,6 +118,8 @@ std::string windows_arg_string(const char** commandLine) {
 #endif
 
 int main(int argc, const char** argv) {
+    std::string long_version_str = get_long_version_string();
+
     if (argc > 1 && argv[1][0] == '-') {
         requires_manual_command = true;
         for (; parse_size < argc; parse_size++){
@@ -132,13 +134,13 @@ int main(int argc, const char** argv) {
     command_argc = argc - parse_size;
     command_argv = &argv[parse_size];
     
-    cxxopts::Options options("nrs", LONG_PROGRAM_NAME ". Common tools for development of N64 Recompiled ports and mods.");
+    cxxopts::Options options("nrs", long_version_str + "\nCommon tools for development of N64 Recompiled ports and mods.");
     options.add_options()
         ("h,help", "Prints usage infomation and then quits")
         ("l,list", "List available commands and then quits")
-        ("i,info", "Print version, usage infomation, and available commands then quits")
+        ("i,info", "Print usage infomation and available commands then quits")
         ("d,debug", "Enable debug output")
-        ("v,version", "Print version info and exit")
+        ("v,version", "Print version info and quits")
     ;
 
     options.custom_help("[OPTIONS... --] [SHIM COMMAND...]");
@@ -157,7 +159,7 @@ int main(int argc, const char** argv) {
     }
 
     if (global::option_args.count("version")) {
-        std::cout << get_long_version_string() << std::endl;
+        std::cout << get_version_string() << std::endl;
         return 0;
     }
 
@@ -178,7 +180,6 @@ int main(int argc, const char** argv) {
     }
 
     if (global::option_args.count("info")) {
-        std::cout << get_long_version_string() << std::endl;
         std::cout << options.help() << std::endl;
         config_list_commands();
         return 0;

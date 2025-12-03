@@ -32,12 +32,12 @@ int config_create_file() {
                 },
                 {"c", {
                        {CONFIG_SHORTCUT_PATH_KEY, "./bin/clang" EXEC_EXTENSION},
-                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM C compiler with MIPS support only."}
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM C compiler with MIPS support only"}
                     }
                 },
                 {"l", {
                        {CONFIG_SHORTCUT_PATH_KEY, "./bin/ld.lld" EXEC_EXTENSION},
-                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM Linker with MIPS support only."}
+                       {CONFIG_SHORTCUT_COMMENT_KEY, "LLVM Linker with MIPS support only"}
                     }
                 },
             }
