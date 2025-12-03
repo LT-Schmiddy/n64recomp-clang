@@ -26,8 +26,8 @@ def get_file_extensions() -> tuple[str]:
 
 def get_archive_type() -> str:
     archive_type = "xztar"
-    if os.name == 'nt':
-        archive_type = "zip"
+    # if os.name == 'nt':
+    #    archive_type = "zip"
         
     return archive_type
 
