@@ -30,15 +30,15 @@ jobs:
       - name: double-checking-submodules
         run: |-
           git submodule update --init --recursive
+      - name: Configure Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
       - name: choco-install-ninja-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install ninja python
-      - name: Configure Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1
       - name: run-windows-build
         run: |-
-          c:/python314/python.exe ./build_all.py native-windows-x64
+          C:/python314/python.exe ./build_all.py native-windows-x64
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:
