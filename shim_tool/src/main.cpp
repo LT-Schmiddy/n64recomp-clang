@@ -209,7 +209,7 @@ int main(int argc, const char** argv) {
     bool cmd_found = config_find_command(cmd_name, &cmd_path);
 
     if (!cmd_found) {
-        std::cerr << LOG_PREFIX "Error: command '" << cmd_name << "' not found." << std::endl;
+        std::cerr << LOG_PREFIX "Error - command '" << cmd_name << "' not found." << std::endl;
         return 1;
     }
 
@@ -249,7 +249,7 @@ int main(int argc, const char** argv) {
             &pi )           // Pointer to PROCESS_INFORMATION structure
         ) {
             DWORD last_error = GetLastError();
-            std::cerr << LOG_PREFIX "Error: failed to run command '" << cmd_name << "' - Error code " << last_error << std::endl;
+            std::cerr << LOG_PREFIX "Error - failed to run command '" << cmd_name << "' - Error code " << last_error << std::endl;
             return last_error;
         }
         DWORD exitCode;

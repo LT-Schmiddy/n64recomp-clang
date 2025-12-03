@@ -51,7 +51,7 @@ int config_create_file() {
         out_file << out_config.dump(4);
         out_file.close();
     } else {
-        std::cerr << LOG_PREFIX "Error: Config at '" << global::config_file_path.string().c_str() << "' could not be created." << std::endl;
+        std::cerr << LOG_PREFIX "Error - Config at '" << global::config_file_path.string().c_str() << "' could not be created." << std::endl;
         return 1;
     }
 
@@ -70,7 +70,7 @@ int config_load_file() {
         }
         in_file.close();
     } else {
-        std::cerr << LOG_PREFIX "Error: Config at '" << global::config_file_path.string().c_str() << "' could not be opened." << std::endl;
+        std::cerr << LOG_PREFIX "Error - Config at '" << global::config_file_path.string().c_str() << "' could not be opened." << std::endl;
         return 1;
     }
     return 0;
@@ -85,7 +85,7 @@ bool config_find_command(std::string cmd, fs::path* out_path) {
     if (shortcuts.contains(cmd)) {
         ns::json shortcut_cmd = shortcuts[cmd];
         if (!shortcut_cmd.contains(CONFIG_SHORTCUT_PATH_KEY)){
-            std::cerr << LOG_PREFIX "Error: The shortcut '" << cmd << "' is missing a " << CONFIG_SHORTCUT_PATH_KEY << " entry" << std::endl;
+            std::cerr << LOG_PREFIX "Error - The shortcut '" << cmd << "' is missing a " << CONFIG_SHORTCUT_PATH_KEY << " entry" << std::endl;
             return false;
         }
         std::string cmd_path_str = shortcut_cmd["path"].get<std::string>();
@@ -95,7 +95,7 @@ bool config_find_command(std::string cmd, fs::path* out_path) {
         }
 
         if (!fs::exists(cmd_path)) {
-            std::cerr << LOG_PREFIX "Error: The binary for shortcut '" << cmd << "' ('" << cmd_path_str << "') does not exist." << std::endl;
+            std::cerr << LOG_PREFIX "Error - The binary for shortcut '" << cmd << "' ('" << cmd_path_str << "') does not exist." << std::endl;
             return false;
         }
 
