@@ -1,6 +1,8 @@
 import sys, os, shutil, subprocess, platform
 from pathlib import Path
 
+print(f"Python Version {sys.version}")
+
 import build_common as bc
 import build_shim_tool as bs
 import build_n64recomp as bn
@@ -38,7 +40,9 @@ def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]
         print(f"Copying '{src}' to '{dst}'...")
         shutil.copy(src, dst)
 
-    print(f"Creating '{name}'...")
+    print(f"Creating '{name}' from {archive_root}")
+    for i in os.listdir(archive_root):
+        print(i)
     shutil.make_archive(archives_dir.joinpath(name), bc.get_archive_type(), archive_root, "")
 
 def build_all_archives():
@@ -62,8 +66,8 @@ def build_all_archives():
 def main():
     bs.build_tools(sys.argv[1])
     bn.build_tools(sys.argv[1])
-    bl.build_tools(sys.argv[1])
-    # bl.build_dummy()
+    # bl.build_tools(sys.argv[1])
+    bl.build_dummy()
         
     build_all_archives()
     

@@ -15,6 +15,13 @@
             "cacheVariables": { 
             }
         },
+	{
+            "name": "default-Release",
+	    "inherits": "default",
+	    "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+	},
         {
             "name": "native-windows-x64",
             "inherits": "default",
