@@ -1,5 +1,4 @@
 target_sources(${SHIM_TOOL_NAME} PUBLIC
     "main.cpp"
     "config.cpp"
-    "windows_compat.cpp"
 )

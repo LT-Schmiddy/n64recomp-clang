@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-#include "subprocess.h"
+
 #include "./globals.hpp"
 #include "./config.hpp"
 
@@ -12,6 +12,7 @@
 #ifdef _WIN32 
     #include <process.h>
     #include <windows.h>
+    #include "subprocess.h"
 #else
     #include <unistd.h>
 #endif
