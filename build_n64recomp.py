@@ -3,7 +3,7 @@ from pathlib import Path
 import build_common as bc
 
 n64recomp_url = "https://github.com/N64Recomp/N64Recomp.git"
-n64recomp_commit = "f14ffe6064881e29e4e7da016be525f6c04f4369"
+n64recomp_commit = "0fab168437a564c1fc93786acdaadcd6bb8c52f1"
 n64recomp_clone_name = "clone"
 
 proot = Path(__file__).parent
