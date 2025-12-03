@@ -66,8 +66,8 @@ def build_all_archives():
 def main():
     bs.build_tools(sys.argv[1])
     bn.build_tools(sys.argv[1])
-    # bl.build_tools(sys.argv[1])
-    bl.build_dummy()
+    bl.build_tools(sys.argv[1])
+    # bl.build_dummy()
         
     build_all_archives()
     
