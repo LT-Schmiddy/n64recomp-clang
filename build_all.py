@@ -38,7 +38,7 @@ def build_archive(name: str, archive_parent: Path, included_binaries: list[Path]
         print(f"Copying '{src}' to '{dst}'...")
         shutil.copy(src, dst)
 
-    print(f"Creating '{name}'...")
+    print(f"Creating '{name}' from ... {archive_root}")
     shutil.make_archive(archives_dir.joinpath(name), bc.get_archive_type(), archive_root, "")
 
 def build_all_archives():
