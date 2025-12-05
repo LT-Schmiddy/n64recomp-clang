@@ -15,13 +15,20 @@
             "cacheVariables": { 
             }
         },
-	{
+        {
+            "name": "default-Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
             "name": "default-Release",
-	    "inherits": "default",
-	    "cacheVariables": {
+            "inherits": "default",
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
-	},
+        },
         {
             "name": "native-windows-x64",
             "inherits": "default",
@@ -215,6 +222,14 @@
         {
             "name": "default",
             "configurePreset": "default"
+        },
+        {
+            "name": "default-Debug",
+            "configurePreset": "default-Debug"
+        },
+        {
+            "name": "default-Release",
+            "configurePreset": "default-Release"
         },
         {
             "name": "native-windows-x64",
