@@ -17,6 +17,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: windows-latest
     outputs:
+      clang_build_version: ${{ steps.get_clang_build_version.outputs.generated_value }}
+      shim_build_version: ${{ steps.get_shim_build_version.outputs.generated_value }}
+      toolsonly-binaries: ${{ steps.archive-toolsonly-binaries.outputs.artifact-id }}
       essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
       all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -44,6 +47,10 @@ jobs:
         run: |-
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe --version
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./build_all.py native-windows-x64
+      - name: get_clang_build_version
+        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_clang_version.py >> $GITHUB_OUTPUT
+      - name: get_shim_build_version
+        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_shim_version.py >> $GITHUB_OUTPUT
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:

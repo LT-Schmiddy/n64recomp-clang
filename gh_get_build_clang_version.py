@@ -3,5 +3,5 @@ from pathlib import Path
 
 import build_llvm as bl
 
-clang_str = bl.get_clang_version_string()
+clang_str = bl.get_clang_version_string().title()
 print(f"clang_build_version=\"{clang_str}\"")
