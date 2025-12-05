@@ -1,15 +1,15 @@
-name: publish-shim-release
+name: publish-shim-release-preview
 on:
   push:
     tags:        
-      - 'shim-release-*.*.*'
+      - 'shim-release-preview-*.*.*'
 jobs:
   build-windows: 
-    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
   build-ubuntu:
-    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@master
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@dev
   build-macos: 
-    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-macos.yml@master
+    uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-macos.yml@dev
   publish-release:
     runs-on: windows-latest
     needs: [build-windows, build-ubuntu, build-macos]
@@ -38,5 +38,6 @@ jobs:
           body_path: ${{ github.workspace }}/_release.md
           files: |
             $GITHUB_WORKSPACE/archives/*/*
-          make_latest: true
+          make_latest: false
+          prerelease: true
       
