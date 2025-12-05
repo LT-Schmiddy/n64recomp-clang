@@ -1,8 +1,8 @@
-name: publish-shim-release-preview
+name: publish-shim-prerelease
 on:
   push:
     tags:        
-      - 'shim-release-preview-*.*.*'
+      - 'shim-prerelease-*.*.*'
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@dev
