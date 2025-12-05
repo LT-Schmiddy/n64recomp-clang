@@ -17,8 +17,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     outputs:
-      clang_build_version: ${{ steps.get_clang_build_version.outputs.generated_value }}
-      shim_build_version: ${{ steps.get_shim_build_version.outputs.generated_value }}
+      clang-build-version: ${{ steps.get-clang-build-version.outputs.generated_value }}
+      shim-build-version: ${{ steps.get-shim_build-version.outputs.generated_value }}
       toolsonly-binaries: ${{ steps.archive-toolsonly-binaries.outputs.artifact-id }}
       essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
       all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}

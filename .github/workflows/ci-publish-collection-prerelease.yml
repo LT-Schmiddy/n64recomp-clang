@@ -10,7 +10,7 @@ jobs:
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-ubuntu.yml@dev
   build-macos: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-macos.yml@dev
-  publish-release:
+  publish-prerelease:
     runs-on: windows-latest
     needs: [build-windows, build-ubuntu, build-macos]
     steps:
@@ -29,7 +29,7 @@ jobs:
           args: install python
       - name: run-windows-build
         run: |-
-          python ./gh_generate_release_message_collection.py "${{ needs.build-ubuntu.outputs.shim_build_version }}" "${{ needs.build-ubuntu.outputs.clang_build_version }}""
+          python ./gh_generate_release_message_collection.py "${{ needs.build-ubuntu.outputs.shim-build-version }}" "${{ needs.build-ubuntu.outputs.clang-build-version }}""
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
