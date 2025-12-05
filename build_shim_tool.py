@@ -13,6 +13,25 @@ exec_names = [
     "nrs._"
 ]
 
+def get_shim_version_string() -> str:    
+    try:
+        nrs_result = subprocess.run(
+            [
+                build_bin_dir.joinpath("nrs"),
+                "--version"
+            ],
+            cwd=build_bin_dir,
+            stdout = subprocess.PIPE
+        )
+
+        bc.validate_command("Getting Built Shim Info", nrs_result)
+        out_str = nrs_result.stdout.decode()
+        name_str = out_str.split("\n")[0].split("\r")[0]
+    except OSError as e:
+        name_str = "unknown"
+    
+    return name_str
+
 def build_tools(preset: str):
     print("Building...")
     tools: dict[str, str] = {}

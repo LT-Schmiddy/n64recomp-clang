@@ -23,15 +23,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: $GITHUB_WORKSPACE/archives
-      - name: choco-install-ninja-python
+      - name: choco-install-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install python
-      - name: Configure Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1
       - name: run-windows-build
         run: |-
-          python ./gh_generate_release_message_llvm.py
+          python ./gh_generate_release_message_collection.py
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')

@@ -57,7 +57,6 @@ def get_clang_version_string() -> str:
     except OSError as e:
         name_str = "unknown"
     
-    print(f"{name_str}")
     return name_str
 
 def download_llvm_commit():

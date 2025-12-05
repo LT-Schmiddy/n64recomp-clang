@@ -75,3 +75,14 @@ def download_commit(repo_url: str, commit_id: str, clone_dir: Path, repo_name: s
             cwd=clone_dir
         )
     )
+
+def get_native_preset():
+    if platform.system() == "Windows":
+        return "native-windows-x64"
+    elif platform.system() == "Darwin":
+        if platform.machine() == "AMD64":
+            "native-macos-x64"
+        else:
+            return "native-macos-aarch64"
+    else:
+        return "native-linux-x64"

@@ -1,0 +1,7 @@
+import sys, os, shutil, subprocess, platform
+from pathlib import Path
+
+import build_llvm as bl
+
+clang_str = bl.get_clang_version_string()
+print(f"clang_build_version=\"{clang_str}\"")
