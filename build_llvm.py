@@ -139,45 +139,6 @@ def get_all_binaries() -> list[Path]:
                 retVal.append(binary)
                 
     return retVal
-    
-
-# Old ===========================================
-def create_essentials_dir():
-    print("Preparing Essentials...")
-    exec_suffix, libs_suffix = bc.get_file_extensions()
-    
-    os.makedirs(build_bin_essentials_dir, exist_ok=True)
-    for i in essential_exec_names:
-        src = build_bin_dir.joinpath(i).with_suffix(exec_suffix)
-        dst = build_bin_essentials_dir.joinpath(i).with_suffix(exec_suffix)
-        if src.is_file():
-            print(f"Copying '{src}' to '{dst}'...")
-            shutil.copy(src, dst)
-        
-    for i in essential_libs_names:
-        src = build_bin_dir.joinpath(i).with_suffix(libs_suffix)
-        dst = build_bin_essentials_dir.joinpath(i).with_suffix(libs_suffix)
-        if src.is_file():
-            print(f"Copying '{src}' to '{dst}'...")
-            shutil.copy(src, dst)
-
-def create_release_archives():
-    archive_type = "xztar"
-    if os.name == 'nt':
-        archive_type = "zip"
-        
-    name_str: str = get_clang_version_string().capitalize()
-    essentials_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-{platform.machine()}-N64RecompEssentials")
-    full_archive_path = upload_dir.joinpath(f"{name_str.replace(' ', '_')}-MipsOnly-{platform.system()}-{platform.machine()}-Full")
-    os.makedirs(upload_dir, exist_ok=True)
-    
-    print("Creating Essentials Release Archive...")
-    shutil.make_archive(essentials_archive_path, archive_type, build_bin_essentials_dir.parent, build_bin_essentials_dir.name)
-    
-    print("Creating Full Release Archive...")
-    shutil.make_archive(full_archive_path, archive_type, build_bin_dir.parent, build_bin_dir.name)
-    
-#================================================
 
 
 def main():
@@ -187,9 +148,6 @@ def main():
         build_dummy()
     else:
         build_tools(sys.argv[1])
-        
-    create_essentials_dir()
-    create_release_archives() 
     
 if __name__ == '__main__':
     main()
