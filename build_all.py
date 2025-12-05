@@ -66,8 +66,11 @@ def build_all_archives():
 def main():
     bs.build_tools(sys.argv[1])
     bn.build_tools(sys.argv[1])
-    # bl.build_tools(sys.argv[1])
-    bl.build_dummy()
+    if "--llvm_dummy" in sys.argv:
+        bl.build_dummy()
+    else:
+        bl.build_tools(sys.argv[1])
+
         
     build_all_archives()
     
