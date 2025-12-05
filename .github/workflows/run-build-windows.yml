@@ -48,9 +48,9 @@ jobs:
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe --version
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./build_all.py native-windows-x64
       - name: get-clang-build-version
-        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_clang_version.py >> $GITHUB_OUTPUT
+        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_clang_version.py >> "$GITHUB_OUTPUT"
       - name: get-shim-build-version
-        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_shim_version.py >> $GITHUB_OUTPUT
+        run: C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe ./gh_get_build_shim_version.py >> "$GITHUB_OUTPUT"
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:

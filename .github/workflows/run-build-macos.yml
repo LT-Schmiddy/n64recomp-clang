@@ -41,9 +41,9 @@ jobs:
         run: |-
           python ./build_all.py native-macos-aarch64
       - name: get_clang_build_version
-        run: python ./gh_get_build_clang_version.py >> $GITHUB_OUTPUT
+        run: python ./gh_get_build_clang_version.py >> "$GITHUB_OUTPUT"
       - name: get_shim_build_version
-        run: python ./gh_get_build_shim_version.py >> $GITHUB_OUTPUT
+        run: python ./gh_get_build_shim_version.py >> "$GITHUB_OUTPUT"
       - name: archive-toolsonly-binaries
         uses: actions/upload-artifact@v4
         with:
