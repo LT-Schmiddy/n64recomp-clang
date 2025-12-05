@@ -29,7 +29,7 @@ jobs:
           args: install python
       - name: run-windows-build
         run: |-
-          python ./gh_generate_release_message_collection.py "${{ needs.build-ubuntu.outputs.shim-build-version }}" "${{ needs.build-ubuntu.outputs.clang-build-version }}""
+          python ./gh_generate_release_message_collection.py
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
