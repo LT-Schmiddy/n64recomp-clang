@@ -40,12 +40,9 @@ jobs:
         with:
           args: install ninja
       - name: choco-install-python
-        uses: crazy-max/ghaction-chocolatey@v3
+        uses: actions/setup-python@v6
         with:
-          args: install python --force --install-arguments="'/l*v c:\python314_msi_install.log'"
-      - name: print-python-install-log
-        run: |-
-          cat c:\python314_msi_install.log
+          python-version: '3.14' 
       - name: run-windows-build
         run: |-
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe --version
