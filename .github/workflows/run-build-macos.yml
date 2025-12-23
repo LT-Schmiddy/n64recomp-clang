@@ -53,19 +53,19 @@ jobs:
         with:
           name: toolsonly-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompToolsOnly*
+            ./archives/*N64RecompToolsOnly*
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
           name: essentials-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompAndClangEssentials*
+            ./archives/*ClangEssentialsAndN64Recomp*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
           name: full-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompAndClangFull*
+            ./archives/*ClangFullAndN64Recomp*
   # This workflow contains a single job called "build"
   build-macos-x64:
     # The OS of runner that the job will run on
@@ -104,18 +104,18 @@ jobs:
         with:
           name: toolsonly-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompToolsOnly*
+            ./archives/*N64RecompToolsOnly*
       - name: archive-essential-binaries
         uses: actions/upload-artifact@v4
         with:
           name: essentials-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompAndClangEssentials*
+            ./archives/*ClangEssentialsAndN64Recomp*
       - name: archive-full-binaries
         uses: actions/upload-artifact@v4
         with:
           name: full-${{ runner.os }}-${{ runner.arch }}
           path: |
-            ./archives/N64RecompAndClangFull*
+            ./archives/*ClangFullAndN64Recomp*
 
         
