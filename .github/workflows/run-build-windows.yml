@@ -42,7 +42,7 @@ jobs:
       - name: choco-install-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
-          args: install python --version 3.14
+          args: install python
       - name: run-windows-build
         run: |-
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe --version
