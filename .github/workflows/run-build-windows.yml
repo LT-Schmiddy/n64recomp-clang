@@ -30,9 +30,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           submodules: recursive
-      - name: double-checking-submodules
+      - name: print-python-version
         run: |-
-          git submodule update --init --recursive
+          python --version
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: choco-install-ninja
