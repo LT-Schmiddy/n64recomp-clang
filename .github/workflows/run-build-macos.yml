@@ -36,7 +36,7 @@ jobs:
         uses: tecolicom/actions-use-homebrew-tools@v1
         with:
           # homebrew packages
-          tools: 'cmake ninja-build'
+          tools: 'cmake ninja'
       - name: setup-python
         uses: actions/setup-python@v6
         with:
