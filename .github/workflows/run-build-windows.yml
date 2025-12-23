@@ -39,7 +39,7 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install ninja
-      - name: choco-install-python
+      - name: setup-python
         uses: actions/setup-python@v6
         with:
           python-version: '3.14' 
