@@ -1,9 +1,10 @@
-/.vscode/
-/archives/
-/build*/
-/clone*/
+.vscode/
+archives/
+build*/
+clone*/
 *.pyc
-/shim_tool/build
+shim_tool/build
+venv/
 _release.md
 CMakeUserPresets.json
 

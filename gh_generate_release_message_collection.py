@@ -7,9 +7,9 @@ import build_llvm
 
 release_md = build_llvm.proot.joinpath("_release.md")
 
-shim_version_str = build_shim_tool.get_shim_version_string()
-
-clang_version_str = build_llvm.get_clang_version_string().title()
+# Not worrying about finding this at runtime, for now:
+shim_version_str = "0.1.0"
+clang_version_str = "21.1.8"
 
 release_md.write_text(f"""
 
