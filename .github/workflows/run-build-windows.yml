@@ -42,7 +42,10 @@ jobs:
       - name: choco-install-python
         uses: crazy-max/ghaction-chocolatey@v3
         with:
-          args: install python
+          args: install python --force --install-arguments="'/l*v c:\python314_msi_install.log'"
+      - name: print-python-install-log
+        run: |-
+          cat c:\python314_msi_install.log
       - name: run-windows-build
         run: |-
           C:/hostedtoolcache/windows/Python/3.14.0/x64/python.exe --version
