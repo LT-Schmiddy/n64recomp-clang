@@ -32,11 +32,15 @@ jobs:
       - name: double-checking-submodules
         run: |-
           git submodule update --init --recursive
-      # - name: set-up-build-tools
-      #   uses: tecolicom/actions-use-homebrew-tools@v1
-      #   with:
-      #     # homebrew packages
-      #     tools: 'cmake ninja-build'
+      - name: set-up-build-tools
+        uses: tecolicom/actions-use-homebrew-tools@v1
+        with:
+          # homebrew packages
+          tools: 'cmake ninja-build'
+      - name: setup-python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14' 
       - name: run-macos-build
         run: |-
           python ./build_all.py native-macos-aarch64

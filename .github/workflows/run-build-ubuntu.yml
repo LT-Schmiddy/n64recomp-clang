@@ -35,7 +35,11 @@ jobs:
           git submodule update --init --recursive
       - name: set-up-build-tools
         run: |-
-          sudo apt update; sudo apt install -y cmake clang lld ninja-build python3 gcc
+          sudo apt update; sudo apt install -y cmake clang lld ninja-build gcc
+      - name: setup-python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14' 
       - name: run-ubuntu-build
         run: |-
           python ./build_all.py native-linux-x64
