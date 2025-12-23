@@ -2,7 +2,7 @@ name: publish-shim-release
 on:
   push:
     tags:        
-      - 'shim-release-*.*.*'
+      - 'release-*.*.*'
 jobs:
   build-windows: 
     uses: LT-Schmiddy/n64recomp-clang/.github/workflows/run-build-windows.yml@master
@@ -29,7 +29,7 @@ jobs:
           args: install python
       - name: run-windows-build
         run: |-
-          python ./gh_generate_release_message_collection.py "${{ needs.build-windows.outputs.shim_build_version }}" "${{ needs.job1.outputs.clang_build_version }}""
+          python ./gh_generate_release_message_collection.py
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
