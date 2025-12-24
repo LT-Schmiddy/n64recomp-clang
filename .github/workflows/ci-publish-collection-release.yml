@@ -23,11 +23,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: $GITHUB_WORKSPACE/archives
-      - name: choco-install-python
-        uses: crazy-max/ghaction-chocolatey@v3
+      - name: setup-python
+        uses: actions/setup-python@v6
         with:
-          args: install python
-      - name: run-windows-build
+          python-version: '3.14' 
+      - name: generate-release-message
         run: |-
           python ./gh_generate_release_message_collection.py
       - name: Release
