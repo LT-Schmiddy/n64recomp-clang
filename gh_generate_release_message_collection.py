@@ -9,7 +9,7 @@ release_md = build_llvm.proot.joinpath("_release.md")
 
 # Not worrying about finding this at runtime, for now:
 shim_version_str = "0.1.0"
-clang_version_str = "21.1.8"
+clang_version_str = "22.1.1"
 
 release_md.write_text(f"""
 

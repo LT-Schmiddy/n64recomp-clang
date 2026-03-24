@@ -3,8 +3,8 @@ from pathlib import Path
 import build_common as bc
 
 llvm_url = "https://github.com/llvm/llvm-project.git"
-# Release 21.1.6
-llvm_commit = "2078da43e25a4623cab2d0d60decddf709aaea28"
+# Release 22.1.1
+llvm_commit = "fef02d48c08db859ef83f84232ed78bd9d1c323a"
 llvm_clone_name = "clone"
 
 proot = Path(__file__).parent
