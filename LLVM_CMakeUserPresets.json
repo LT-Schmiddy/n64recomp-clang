@@ -37,6 +37,11 @@
             "description": "This build is only available on Ubuntu"
         },
         {
+            "name": "native-linux-aarch64",
+            "inherits": "default",
+            "description": "This build is only available on Ubuntu"
+        },
+        {
             "name": "native-macos-x64",
             "inherits": "default",
             "description": "This build is only available on Mac Os"

@@ -15,7 +15,55 @@ jobs:
   # This workflow contains a single job called "build"
   build-ubuntu-x64:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    outputs:
+      clang-build-version: ${{ steps.get-clang-build-version.outputs.generated_value }}
+      shim-build-version: ${{ steps.get-shim_build-version.outputs.generated_value }}
+      toolsonly-binaries: ${{ steps.archive-toolsonly-binaries.outputs.artifact-id }}
+      essential-binaries: ${{ steps.archive-essential-binaries.outputs.artifact-id }}
+      all-binaries: ${{ steps.archive-all-binaries.outputs.artifact-id }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          submodules: recursive
+      - name: double-checking-submodules
+        run: |-
+          git submodule update --init --recursive
+      - name: set-up-build-tools
+        run: |-
+          sudo apt update; sudo apt install -y cmake clang lld ninja-build gcc
+      - name: setup-python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14' 
+      - name: run-ubuntu-build
+        run: |-
+          python ./build_all.py native-linux-x64
+      - name: archive-toolsonly-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolsonly-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/*N64RecompToolsOnly*
+      - name: archive-essential-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: essentials-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/*ClangEssentialsAndN64Recomp*
+      - name: archive-full-binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ./archives/*ClangFullAndN64Recomp*
+  build-ubuntu-arm64:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04-arm
     outputs:
       clang-build-version: ${{ steps.get-clang-build-version.outputs.generated_value }}
       shim-build-version: ${{ steps.get-shim_build-version.outputs.generated_value }}
